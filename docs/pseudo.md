@@ -2,17 +2,17 @@
 A simple calculator app which runs in the browser. It displays one number at a time and can perform calculations on a series of inputs. Pressing 'AC' will clear the system and start fresh.
 
 ## DEV STAGES:
-1. [] Create Operator functions
-  - [] Add
-  - [] Subtract
-  - [] Multiply
-  - [] Divide
+1. [x] Create Operator functions
+  - [x] Add
+  - [x] Subtract
+  - [x] Multiply
+  - [x] Divide
 
 2. [] A calculator operation will consist of a number, an operator, and another number. For example, 3 + 5. Create three variables for each of the parts of a calculator operation. 
-  - [] Create variables:
-    - [] for the first number, 
-    - [] the operator, 
-    - [] and the second number. 
+  - [x] Create variables:
+    - [x] for the first number, 
+    - [x] the operator, 
+    - [x] and the second number. 
 You’ll use these variables to update your display later.
 
 3. [] Create a new function 'operate' that takes an operator and 2 numbers and then calls one of the above functions on the numbers.

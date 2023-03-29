@@ -1,3 +1,8 @@
+// OPERATION VARS
+const a = 0;
+const op = '';
+const b = 0;
+
 // Operator Functions:
 // FUNC: sum() input 2 numbers, return their sum
 function add(a, b) {
@@ -18,3 +23,5 @@ function multiply(a, b) {
 function divide(a, b) {
   return (isNaN(a) || isNaN(b)) ? prompt("Error: Input is not a number") : a / b;
 }
+
+
