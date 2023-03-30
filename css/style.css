@@ -13,4 +13,12 @@
 
 .display {
   border: 2px solid black;
+  background-color: rgb(221, 212, 212);
+
+  grid-row: [display-start] 1.5fr [display-end];
+  grid-column: 1 / 5;
+}
+
+.num-0 {
+  grid-column: 1 / 3;
 }
