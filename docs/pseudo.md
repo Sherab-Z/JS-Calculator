@@ -15,7 +15,7 @@ A simple calculator app which runs in the browser. It displays one number at a t
     - [x] and the second number. 
 You’ll use these variables to update your display later.
 
-3. [] Create a new function 'operate' that takes an operator and 2 numbers and then calls one of the above functions on the numbers.
+3. [x] Create a new function 'operate' that takes an operator and 2 numbers and then calls one of the above functions on the numbers.
 
 4. [] Create a basic HTML calculator with:
    - [] buttons for each digit, 

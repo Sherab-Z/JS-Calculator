@@ -1,0 +1,16 @@
+.inner.grid.cont {
+  display: grid;
+  grid-template-areas:
+    "display display display display"
+    "top-btn top-btn top-btn op-btn"
+    "num-btn num-btn num-btn op-btn"
+    "num-btn num-btn num-btn op-btn"
+    "num-btn num-btn num-btn op-btn"
+    "num-btn num-btn dot-btn equals-btn";
+  grid-template-rows: 1.5fr repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.display {
+  border: 2px solid black;
+}
