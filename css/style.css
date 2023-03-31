@@ -1,0 +1,25 @@
+.inner.grid.cont {
+  display: grid;
+  grid-template-areas:
+    "display display display display"
+    "top-btn top-btn top-btn op-btn"
+    "num-btn num-btn num-btn op-btn"
+    "num-btn num-btn num-btn op-btn"
+    "num-btn num-btn num-btn op-btn"
+    "num-btn num-btn dot-btn equals-btn";
+  grid-template-rows: 1.5fr repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.display {
+  border: 2px solid black;
+  background-color: rgb(221, 212, 212);
+
+  grid-row: [display-start] 1.5fr [display-end];
+  grid-column: 1 / 5;
+}
+
+.num-0 {
+  grid-row: 6/7;
+  grid-column: 1 / 3;
+}
