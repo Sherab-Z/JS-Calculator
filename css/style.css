@@ -8,7 +8,7 @@ body * {
 
 body {
   height: 100vh;
-  background-color: rgba(130, 218, 41, 0.669);
+  background-color: rgb(2, 69, 16);
 }
 
 header {
@@ -16,6 +16,7 @@ header {
   height: 10%;
   justify-content: center;
   align-items: center;
+  color: rgb(120, 201, 248);
 }
 
 main {
@@ -27,6 +28,11 @@ main {
 
 footer {
   height: 10%;
+  color: white;
+}
+
+a {
+  color: rgb(57, 176, 244);
 }
 
 .outer.container {
@@ -56,15 +62,24 @@ footer {
   border-radius: 1%;
 }
 
-.display {
+.display.container {
+  padding: 10px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
   border: 2px solid black;
   border-radius: 15%;
   background-color: rgb(221, 212, 212);
   grid-column: 1 / 5;
+  font-size:3.5em;
+}
+
+.display.txt {
+
 }
 
 .btn {
-  font-size: x-large;
+  font-size: 2em;
   border-radius: 10%;
 }
 
