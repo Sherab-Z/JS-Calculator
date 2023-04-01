@@ -1,4 +1,42 @@
-.inner.grid.cont {
+* {
+  box-sizing: border-box;
+}
+
+body * {
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+body {
+  height: 100vh;
+  background-color: rgba(130, 218, 41, 0.669);
+}
+
+header {
+  display: flex;
+  height: 10%;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+  display: flex;
+  height: 80%;
+  justify-content: center;
+  align-items: center;
+}
+
+footer {
+  height: 10%;
+}
+
+.outer.container {
+  width: 350px;
+  height: 650px;
+}
+
+.inner.grid.container {
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-areas:
     "display display display display"
@@ -7,18 +45,55 @@
     "num-btn num-btn num-btn op-btn"
     "num-btn num-btn num-btn op-btn"
     "num-btn num-btn dot-btn equals-btn";
-  grid-template-rows: 1.5fr repeat(5, 1fr);
+  grid-template-rows: 1.2fr repeat(5, 1fr);
   grid-template-columns: repeat(4, 1fr);
+  grid-gap: 5px;
+  justify-content: center;
+  align-content: center;
+  background-color:rgb(96, 85, 85);
+  padding: 3px;
+  border: 2px solid black;
+  border-radius: 1%;
 }
 
 .display {
   border: 2px solid black;
+  border-radius: 15%;
   background-color: rgb(221, 212, 212);
-
-  grid-row: [display-start] 1.5fr [display-end];
   grid-column: 1 / 5;
 }
 
-.num-0 {
+.btn {
+  font-size: x-large;
+  border-radius: 10%;
+}
+
+.btn.num-0 {
   grid-column: 1 / 3;
+}
+
+.btn.top {
+  background-color: rgba(229, 59, 37, 0.931);
+}
+
+.btn.op {
+  background-color: rgba(237, 159, 13, 0.953);
+}
+
+.btn.num {
+  background-color: rgba(44, 187, 44, 0.962);
+}
+
+.btn.decimal {
+  background-color: rgb(33, 235, 154);
+}
+
+.btn.equals {
+  background-color: rgba(255, 255, 23, 0.95);
+}
+
+footer .ftr-content.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 }

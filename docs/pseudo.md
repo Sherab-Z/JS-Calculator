@@ -17,12 +17,12 @@ You’ll use these variables to update your display later.
 
 3. [x] Create a new function 'operate' that takes an operator and 2 numbers and then calls one of the above functions on the numbers.
 
-4. [] Create a basic HTML calculator with:
-   - [] buttons for each digit, 
-   - [] each of the above functions,
-   - [] an “Equals” key,
-   - [] A display for the calculator. Fill it with some dummy numbers so it looks correct, and
-   - [] Add a “clear” button.
+4. [x] Create a basic HTML calculator with:
+   - [x] buttons for each digit, 
+   - [x] each of the above functions,
+   - [x] an “Equals” key,
+   - [x] A display for the calculator. Fill it with some dummy numbers so it looks correct, and
+   - [x] Add a “clear” button.
 Do not worry about wiring up the JS just yet
 
 5. [] Create the functions that populate the display when you click the number buttons. You should be storing the ‘display value’ in a variable somewhere for use in the next step.
