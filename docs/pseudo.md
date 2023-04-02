@@ -1,7 +1,7 @@
 # Overview
 A simple calculator app which runs in the browser. It displays one number at a time and can perform calculations on a series of inputs. Pressing 'AC' will clear the system and start fresh.
 
-## DEV STAGES:
+## DEV ROADMAP:
 1. [x] Create Operator functions
   - [x] Add
   - [x] Subtract
@@ -17,15 +17,15 @@ You’ll use these variables to update your display later.
 
 3. [x] Create a new function 'operate' that takes an operator and 2 numbers and then calls one of the above functions on the numbers.
 
-4. [] Create a basic HTML calculator with:
-   - [] buttons for each digit, 
-   - [] each of the above functions,
-   - [] an “Equals” key,
-   - [] A display for the calculator. Fill it with some dummy numbers so it looks correct, and
-   - [] Add a “clear” button.
+4. [x] Create a basic HTML calculator with:
+   - [x] buttons for each digit, 
+   - [x] each of the above functions,
+   - [x] an “Equals” key,
+   - [x] A display for the calculator. Fill it with some dummy numbers so it looks correct, and
+   - [x] Add a “clear” button.
 Do not worry about wiring up the JS just yet
 
-5. [] Create the functions that populate the display when you click the number buttons. You should be storing the ‘display value’ in a variable somewhere for use in the next step.
+5. >>[] Create the functions that populate the display when you click the number buttons. You should be storing the ‘display value’ in a variable somewhere for use in the next step.
 
 6. [] Make the calculator work! You’ll need to store the first number that is input into the calculator when a user presses an operator, and also save which operation has been chosen and then operate() on them when the user presses the “=” key.
    - You should already have the code that can populate the display, so once operate() has been called, update the display with the ‘solution’ to the operation.
