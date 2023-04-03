@@ -25,11 +25,22 @@ You’ll use these variables to update your display later.
    - [x] Add a “clear” button.
 Do not worry about wiring up the JS just yet
 
-5. >>[] Create the functions that populate the display when you click the number buttons. You should be storing the ‘display value’ in a variable somewhere for use in the next step.
+5. [x] Create the functions that populate the display when you click the number buttons. You should be storing the ‘display value’ in a variable somewhere for use in the next step.
 
-6. [] Make the calculator work! You’ll need to store the first number that is input into the calculator when a user presses an operator, and also save which operation has been chosen and then operate() on them when the user presses the “=” key.
+6. >>[] Make the calculator work! You’ll need to store the first number that is input into the calculator when a user presses an operator, and also save which operation has been chosen and then operate() on them when the user presses the “=” key.
    - You should already have the code that can populate the display, so once operate() has been called, update the display with the ‘solution’ to the operation.
    - This is the hardest part of the project. You need to figure out how to store all the values and call the operate function with them. Don’t feel bad if it takes you a while to figure out the logic.
+
+   ### Psuedocode: (NOTE: I'm halfway through generalizing this from specific example in Notability note)
+   1. User clicks a num btn (E.g. "1")
+      - update varObj.curInpVal (e.g. "1")
+      - push that val to the operations arr: varObj.curInpVal --> varObj.opArr = ["1"]
+      - update the current display val: varObj.curDispVal = "1"
+       - Show this on the calc display
+   2. User clicks btn "5"
+      - concat to current input val: varObj.curInpVal = "15"
+      - 
+
 
 7. [] GOTCHA'S: watch out for and fix these bugs if they show up in your code:
    - [] Users should be able to string together several operations and get the right answer, with each pair of numbers being evaluated at a time. For example, 12 + 7 - 5 * 3 = should yield 42. An example of the behavior we’re looking for would be this student solution (https://mrbuddh4.github.io/calculator/).
