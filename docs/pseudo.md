@@ -32,14 +32,21 @@ Do not worry about wiring up the JS just yet
    - This is the hardest part of the project. You need to figure out how to store all the values and call the operate function with them. Don’t feel bad if it takes you a while to figure out the logic.
 
    ### Psuedocode: (NOTE: I'm halfway through generalizing this from specific example in Notability note)
-   1. User clicks a num btn (E.g. "1")
-      - update varObj.curInpVal (e.g. "1")
-      - push that val to the operations arr: varObj.curInpVal --> varObj.opArr = ["1"]
-      - update the current display val: varObj.curDispVal = "1"
-       - Show this on the calc display
-   2. User clicks btn "5"
-      - concat to current input val: varObj.curInpVal = "15"
-      - 
+   1. User clicks a num button
+      - FUNC: inputNumToArr(num: string) 
+        - IF last el in inpArr !== a number 
+          AND resultIsOnDisplay === false: 
+          - push num to inpArr
+        - ELSE (last el in inpArr) += num
+        - FUNC: display() the last number el in inpArr
+   2. User clicks an op button
+      - Op button gets highlighted (CSS class added) until user clicks elsewhere on the screen
+      - FUNC: inputOpToArr(op: string)
+        - IF inpArr has 3 el's, : 
+          - perform operation
+          - replace inpArr el's with result
+        - ELSE IF inpArr has 2 el's: 
+          - replace last el with op
 
 
 7. [] GOTCHA'S: watch out for and fix these bugs if they show up in your code:
