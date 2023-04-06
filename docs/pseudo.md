@@ -31,22 +31,18 @@ Do not worry about wiring up the JS just yet
    - You should already have the code that can populate the display, so once operate() has been called, update the display with the ‘solution’ to the operation.
    - This is the hardest part of the project. You need to figure out how to store all the values and call the operate function with them. Don’t feel bad if it takes you a while to figure out the logic.
 
-   ### Psuedocode: (NOTE: I'm halfway through generalizing this from specific example in Notability note)
-   1. User clicks a num button
-      - FUNC: inputNumToArr(num: string) 
-        - IF last el in inpArr !== a number 
-          AND resultIsOnDisplay === false: 
-          - push num to inpArr
-        - ELSE (last el in inpArr) += num
-        - FUNC: display() the last number el in inpArr
-   2. User clicks an op button
-      - Op button gets highlighted (CSS class added) until user clicks elsewhere on the screen
-      - FUNC: inputOpToArr(op: string)
-        - IF inpArr has 3 el's, : 
-          - perform operation
-          - replace inpArr el's with result
-        - ELSE IF inpArr has 2 el's: 
-          - replace last el with op
+   ### Psuedocode:
+   1. Btn click populates variable object calcObj
+      { a : (number),
+        op : (string),
+        b : (number),
+        opArr : [],
+        outputVal : (number),
+      }
+      
+   2. At certain points, inObj outputs to operation array opArr
+   3. Operation is done on array, and calcObj.lastResult is updated
+   4. Display the solution OR the current step
 
 
 7. [] GOTCHA'S: watch out for and fix these bugs if they show up in your code:
