@@ -61,9 +61,9 @@ A simple calculator app which runs in the browser. It displays one number at a t
 
       2. Current Operator (inObj.operator): This field stores the current operator (either *, /, +, or -), which is set when an operator button is pressed. If no operator has been set, the field should be null.
 
-      3. First Operand (inObj.operandA): This field stores the first operand of the operation being performed. It is set when an operator button is pressed, and is used to calculate the result when the equals button is pressed.
+      3. First Operand (inObj.a): This field stores the first operand of the operation being performed. It is set when an operator button is pressed, and is used to calculate the result when the equals button is pressed.
 
-      4. Second Operand (inObj.operandB): This field stores the second operand of the operation being performed. It is set when the equals button is pressed, and is used to calculate the result.
+      4. Second Operand (inObj.b): This field stores the second operand of the operation being performed. It is set when the equals button is pressed, and is used to calculate the result.
 
       5.  Modifier (inObj.modifier): This field stores the current modifier (either % or +/-), which is set when a modifier button is pressed. If no modifier has been set, the field should be null.
 
