@@ -8,8 +8,25 @@ const inObj = {
 };
 
 const outObj = {
-  result: 0,
+  output: 0,
   state: "input mode",
+}
+
+// FUNC: Set variable object keys to initial values
+function initialize() {
+  // Set all inObj keys to null
+  Object.keys(inObj).forEach(key => inObj[key] = null);
+  // Set outObj keys to initial values
+  outObj.output = 0;
+  outObj.state = "input mode";
+
+  // Display initial output value
+  displayOutput();
+}
+
+//FUNC: Display the current output value
+function displayOutput() {
+  display.textContent = outObj.output;
 }
 
 // Operator Functions:
@@ -75,81 +92,62 @@ function divide(a, b) {
 //   }
 // }
 
-// FUNC: updates the display with a string from any number button
+// FUNC: update the display with a string from any number button
 function sendNumToDisplay(a) {
-  outObj.displayVal = a; // Hold the current display value in inObj for later use
-
-  switch (a) {
-    case "0":
-      display.textContent = "0";
-      break;
-    case "1":
-      display.textContent = "1";
-      break;
-    case "2":
-      display.textContent = "2";
-      break;
-    case "3":
-      display.textContent = "3";
-      break;
-    case "4":
-      display.textContent = "4";
-      break;
-    case "5":
-      display.textContent = "5";
-      break;
-    case "6":
-      display.textContent = "6";
-      break;
-    case "7":
-      display.textContent = "7";
-      break;
-    case "8":
-      display.textContent = "8";
-      break;
-    case "9":
-      display.textContent = "9";
-      break;
-    default:
-      console.error("Unexpected input to sendNumToDisplay: " + a);
-  }
+  outObj.output = a; 
+  displayOutput();
 }
 
 
-// EVENT HANDLING
-// Number Buttons
+// EVENT HANDLERS
+
+// Display
 const display = document.querySelector(".display.txt");
 
-const decimalBtn = document.querySelector(".btn.decimal");
-decimalBtn.addEventListener("click", () => sendNumToDisplay("."));
+// Number buttons
+const numBtns = {
+  '.': document.querySelector(".btn.decimal"),
+  '0': document.querySelector(".btn.num-0"),
+  '1': document.querySelector(".btn.num-1"),
+  '2': document.querySelector(".btn.num-2"),
+  '3': document.querySelector(".btn.num-3"),
+  '4': document.querySelector(".btn.num-4"),
+  '5': document.querySelector(".btn.num-5"),
+  '6': document.querySelector(".btn.num-6"),
+  '7': document.querySelector(".btn.num-7"),
+  '8': document.querySelector(".btn.num-8"),
+  '9': document.querySelector(".btn.num-9")
+};
 
-const zeroBtn = document.querySelector(".btn.num-0");
-zeroBtn.addEventListener("click", () => sendNumToDisplay("0"));
+for (const [key, value] of Object.entries(numBtns)) {
+  value.addEventListener("click", () => sendNumToDisplay(key));
+};
 
-const oneBtn = document.querySelector(".btn.num-1");
-oneBtn.addEventListener("click", () => sendNumToDisplay("1"));
+// Modifier buttons
+const modifierBtns = {
+  clear: document.querySelector(".btn.modifier.clear"),
+  sign: document.querySelector(".btn.modifier.sign"),
+  modulus: document.querySelector(".btn.modifier.modulus"),
+};
 
-const twoBtn = document.querySelector(".btn.num-2");
-twoBtn.addEventListener("click", () => sendNumToDisplay("2"));
 
-const threeBtn = document.querySelector(".btn.num-3");
-threeBtn.addEventListener("click", () => sendNumToDisplay("3"));
+  modifierBtns['clear'].addEventListener("click", () => initialize);
 
-const fourBtn = document.querySelector(".btn.num-4");
-fourBtn.addEventListener("click", () => sendNumToDisplay("4"));
 
-const fiveBtn = document.querySelector(".btn.num-5");
-fiveBtn.addEventListener("click", () => sendNumToDisplay("5"));
+// Operator buttons
+const operatorBtns = {
+  '/': document.querySelector(".btn.operator.divide"),
+  '*': document.querySelector(".btn.operator.multiply"),
+  '-': document.querySelector(".btn.operator.subtract"),
+  '+': document.querySelector(".btn.operator.add"),
+};
 
-const sixBtn = document.querySelector(".btn.num-6");
-sixBtn.addEventListener("click", () => sendNumToDisplay("6"));
+for (const [key, value] of Object.entries(operatorBtns)) {
+  value.addEventListener("click", () => sendNumToDisplay(value.textContent));
+};
 
-const sevenBtn = document.querySelector(".btn.num-7");
-sevenBtn.addEventListener("click", () => sendNumToDisplay("7"));
+// Equals button
+const equalsBtn = document.querySelector(".btn.equals");
+equalsBtn.addEventListener("click", () => operate());
 
-const eightBtn = document.querySelector(".btn.num-8");
-eightBtn.addEventListener("click", () => sendNumToDisplay("8"));
-
-const nineBtn = document.querySelector(".btn.num-9");
-nineBtn.addEventListener("click", () => sendNumToDisplay("9"));
 

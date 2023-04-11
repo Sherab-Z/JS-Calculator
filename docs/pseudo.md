@@ -81,27 +81,34 @@ A simple calculator app which runs in the browser. It displays one number at a t
    3. ### Identify the algorithms and processing logic: 
    Simultaneously, you need to identify the algorithms and processing logic that will be used to transform the input data into the output data. This involves understanding the requirements of the application and selecting the appropriate algorithms and data structures to accomplish the desired processing.
 
+      - initialize()
+      - updateState()
+      - 
+
    4. ### Design the processing flow: 
    Also simultaneously: defining the sequence of steps that the input data will go through to produce the output data:
 
-      1. Initialize the calculator with an empty input value and an empty output object.
+   [] NEXT TASK: Set the value of each button in its html el, and pass it to js directly. This will allow the js to be much more high-level and simplified, with no specific button details there. It'll make the logic much clearer...
+
+      1. Initialize the calculator with an empty input value and an empty output value.
+         a. [x] Call an initializer function
 
       2. While the calculator is running:
-         a. Wait for user input.
-         b. If the user enters a digit or decimal point:
+         a. [x] Wait for user input.
+         b. [] IF (the user enters a digit or decimal point - via event listeners on num btns):
             i. Append the input to the current input value in the input queue.
-            ii. Set the output object to the new input value.
-         c. If the user enters an operator:
-            i. If an operator has already been set, calculate the result and set the output object to the result.
-            ii. If an operator has not been set, set the current operator to the input operator and set the calculator state to "operator mode".
-         d. If the user enters a modifier:
-            i. If the modifier is "%" or "+/-", modify the current input value in the input queue accordingly.
-            ii. If the modifier is "AC", clear the input queue and reset the calculator to its initial state.
-         e. If the user enters the equals button:
-            i. If a second operand has already been set, calculate the result and set the output object to the result.
-            ii. If a second operand has not been set, set the second operand to the current input value and calculate the result.
-         f. Update the state of the calculator based on the current input and output values.
-         g. Display the current output object to the user.
+            ii. Set the output value to the new input value.
+         c. [] IF (the user enters an operator):
+            i. IF an operator has already been set: calculate the result and set the output value to the result, then set inObj.operator to the input operator.
+            ii. IF an operator has not been set, set the current operator to the input operator and set the calculator state to "operator mode".
+         d. [] IF (the user enters a modifier):
+            i. IF the modifier is "%" or "+/-", modify the current input value in the input queue accordingly.
+            ii. IF the modifier is "AC", clear the input queue and reset the calculator to its initial state.
+         e. [] IF (the user enters the equals button):
+            i. IF a second operand has already been set, calculate the result and set the output value to the result.
+            ii. IF a second operand has not been set, set the second operand to the current input value and calculate the result.
+         f. [] AFTER EACH INPUT: Update the state of the calculator based on the current input and output values.
+         g. [] AFTER EACH INPUT: Display the current output value to the user.
 
    5. ### Implement and test the logic: 
       1. Initialize the input queue, operand stack, current operator, current modifier, result, and state variables.
