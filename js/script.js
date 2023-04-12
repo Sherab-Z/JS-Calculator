@@ -10,12 +10,12 @@ const inObj = {
 const outObj = {
   output: 0,
   state: "input mode",
-}
+};
 
 // FUNC: Set variable object keys to initial values
 function initialize() {
   // Set all inObj keys to null
-  Object.keys(inObj).forEach(key => inObj[key] = null);
+  Object.keys(inObj).forEach((key) => (inObj[key] = null));
   // Set outObj keys to initial values
   outObj.output = 0;
   outObj.state = "input mode";
@@ -92,62 +92,60 @@ function divide(a, b) {
 //   }
 // }
 
-// FUNC: update the display with a string from any number button
+// FUNC: Update the display with a string from any number button
 function sendNumToDisplay(a) {
-  outObj.output = a; 
+  outObj.output = a;
   displayOutput();
 }
 
-
-// EVENT HANDLERS
-
-// Display
+//  Get reference to Display
 const display = document.querySelector(".display.txt");
 
-// Number buttons
+//  ATTACH EVENT HANDLERS TO BUTTONS
+
+//  Number buttons
 const numBtns = {
-  '.': document.querySelector(".btn.decimal"),
-  '0': document.querySelector(".btn.num-0"),
-  '1': document.querySelector(".btn.num-1"),
-  '2': document.querySelector(".btn.num-2"),
-  '3': document.querySelector(".btn.num-3"),
-  '4': document.querySelector(".btn.num-4"),
-  '5': document.querySelector(".btn.num-5"),
-  '6': document.querySelector(".btn.num-6"),
-  '7': document.querySelector(".btn.num-7"),
-  '8': document.querySelector(".btn.num-8"),
-  '9': document.querySelector(".btn.num-9")
+  decimal: document.querySelector(".btn.decimal"),
+  zero: document.querySelector(".btn.num-0"),
+  one: document.querySelector(".btn.num-1"),
+  two: document.querySelector(".btn.num-2"),
+  three: document.querySelector(".btn.num-3"),
+  four: document.querySelector(".btn.num-4"),
+  five: document.querySelector(".btn.num-5"),
+  six: document.querySelector(".btn.num-6"),
+  seven: document.querySelector(".btn.num-7"),
+  eight: document.querySelector(".btn.num-8"),
+  nine: document.querySelector(".btn.num-9"),
 };
 
-for (const [key, value] of Object.entries(numBtns)) {
-  value.addEventListener("click", () => sendNumToDisplay(key));
-};
+for (const btnEl of Object.values(numBtns)) {
+  btnEl.addEventListener("click", () => sendNumToDisplay(btnEl.value));
+}
 
 // Modifier buttons
 const modifierBtns = {
   clear: document.querySelector(".btn.modifier.clear"),
   sign: document.querySelector(".btn.modifier.sign"),
-  modulus: document.querySelector(".btn.modifier.modulus"),
+  percent: document.querySelector(".btn.modifier.modulus"),
 };
 
+modifierBtns["clear"].addEventListener("click", () => sendNumToDisplay(event.target.value));
+modifierBtns["sign"].addEventListener("click", () => sendNumToDisplay(event.target.value));
+modifierBtns["percent"].addEventListener("click", () => sendNumToDisplay(event.target.value));
 
-  modifierBtns['clear'].addEventListener("click", () => initialize);
-
-
-// Operator buttons
+//  Operator buttons
 const operatorBtns = {
-  '/': document.querySelector(".btn.operator.divide"),
-  '*': document.querySelector(".btn.operator.multiply"),
-  '-': document.querySelector(".btn.operator.subtract"),
-  '+': document.querySelector(".btn.operator.add"),
+  //  For readability, I used different names for these buttons than their corresponding functions
+  div: document.querySelector(".btn.operator.divide"),
+  mult: document.querySelector(".btn.operator.multiply"),
+  sub: document.querySelector(".btn.operator.subtract"),
+  plus: document.querySelector(".btn.operator.add"),
 };
 
-for (const [key, value] of Object.entries(operatorBtns)) {
-  value.addEventListener("click", () => sendNumToDisplay(value.textContent));
-};
+for (const [name, btnEl] of Object.entries(operatorBtns)) {
+  btnEl.addEventListener("click", () => sendNumToDisplay(event.target.value));
+}
 
-// Equals button
+//  Equals button
 const equalsBtn = document.querySelector(".btn.equals");
 equalsBtn.addEventListener("click", () => operate());
-
-
