@@ -1,10 +1,9 @@
 // OPERATION VARS
 const inObj = {
-  input: null,
-  a: null,
-  operator: null,
-  b: null,
-  modifier: null,
+  input: '',
+  b: '',
+  operator: '',
+  a: '',
 };
 
 const outObj = {
@@ -93,15 +92,32 @@ function divide(a, b) {
 // }
 
 // FUNC: Update the display with a string from any number button
-function sendNumToDisplay(a) {
-  outObj.output = a;
+function sendNumToDisplay(event) {
+  outObj.output = event.target.value;
   displayOutput();
 }
 
+// --- EVENT HANDLERS ---
+
+// HANDLER: 'AC' button click
+function handleACBtnInput(event) {
+  initialize(); // Set variable objects inObj and outObj to initial values
+}
+
+// HANDLER: Number button click
+function handleNumBtnInput(event) {
+  if (outObj.state === "input mode" || outObj.state === "result mode") {
+    inObj.input += event.target.value;
+  } else if (outObj.state === "operator mode") {
+    inObj.b = event.target.value;
+  }
+  displayOutput();
+}
+
+// --- GET ELEMENTS + ATTACH EVENT LISTENERS ---
+
 //  Get reference to Display
 const display = document.querySelector(".display.txt");
-
-//  ATTACH EVENT HANDLERS TO BUTTONS
 
 //  Number buttons
 const numBtns = {
@@ -119,7 +135,7 @@ const numBtns = {
 };
 
 for (const btnEl of Object.values(numBtns)) {
-  btnEl.addEventListener("click", () => sendNumToDisplay(btnEl.value));
+  btnEl.addEventListener("click", handleNumBtnInput);
 }
 
 // Modifier buttons
@@ -129,9 +145,9 @@ const modifierBtns = {
   percent: document.querySelector(".btn.modifier.modulus"),
 };
 
-modifierBtns["clear"].addEventListener("click", () => sendNumToDisplay(event.target.value));
-modifierBtns["sign"].addEventListener("click", () => sendNumToDisplay(event.target.value));
-modifierBtns["percent"].addEventListener("click", () => sendNumToDisplay(event.target.value));
+modifierBtns["clear"].addEventListener("click", initialize);
+modifierBtns["sign"].addEventListener("click", sendNumToDisplay);
+modifierBtns["percent"].addEventListener("click", sendNumToDisplay);
 
 //  Operator buttons
 const operatorBtns = {
@@ -143,9 +159,10 @@ const operatorBtns = {
 };
 
 for (const [name, btnEl] of Object.entries(operatorBtns)) {
-  btnEl.addEventListener("click", () => sendNumToDisplay(event.target.value));
+  btnEl.addEventListener("click", sendNumToDisplay);
 }
 
 //  Equals button
 const equalsBtn = document.querySelector(".btn.equals");
-equalsBtn.addEventListener("click", () => sendNumToDisplay(event.target.value));
+equalsBtn.addEventListener("click", sendNumToDisplay);
+

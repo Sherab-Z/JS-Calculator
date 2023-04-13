@@ -73,7 +73,6 @@ A simple calculator app which runs in the browser. It displays one number at a t
 
          - "input mode": The calculator is currently accepting input from the user.
          - "operator mode": The calculator has received an operator and is waiting for the second operand.
-         - "modifier mode": The calculator has received a modifier and is waiting for the user to input a  value to modify.
          - "result mode": The calculator has finished a calculation and is displaying the result.
 
    This data model allows the app to keep track of the current state of the calculator and perform calculations based on user input. 
@@ -95,12 +94,12 @@ A simple calculator app which runs in the browser. It displays one number at a t
 
       2. While the calculator is running:
          a. [x] Wait for user input.
-         b. [] IF (the user enters a digit or decimal point - via event listeners on num btns):
+         b. [..] IF (the user enters a digit or decimal point - via event listeners on num btns):
             i. Append the input to the current input value in the input queue.
             ii. Set the output value to the new input value.
          c. [] IF (the user enters an operator):
-            i. IF an operator has already been set: calculate the result and set the output value to the result, then set inObj.operator to the input operator.
-            ii. IF an operator has not been set, set the current operator to the input operator and set the calculator state to "operator mode".
+            i. IF an operator has not been set, set the current operator to the input operator and set the calculator state to "operator mode".
+            ii. IF an operator has already been set: calculate the result and set the output value to the result, then set inObj.operator to the input operator.
          d. [] IF (the user enters a modifier):
             i. IF the modifier is "%" or "+/-", modify the current input value in the input queue accordingly.
             ii. IF the modifier is "AC", clear the input queue and reset the calculator to its initial state.

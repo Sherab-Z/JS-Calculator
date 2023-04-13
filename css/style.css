@@ -8,16 +8,21 @@ body * {
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 /* PAGE BACKGROUND */
 body {
-  height: 100vh;
+  overflow: auto;
   background-color: rgb(2, 69, 16);
 }
 
 /* SECTION: HEADER */
 header {
   display: flex;
-  height: 10%;
+  min-height: 10vh;
   justify-content: center;
   align-items: center;
   color: rgb(120, 201, 248);
@@ -26,14 +31,14 @@ header {
 /* SECTION: MAIN */
 main {
   display: flex;
-  height: 80%;
+  min-height: 80vh;
   justify-content: center;
   align-items: center;
 }
 
 /* SECTION: FOOTER */
 footer {
-  height: 10%;
+  min-height: 10vh;
   color: white;
 }
 
@@ -77,7 +82,7 @@ a {
   border-radius: 1%;
 }
 
-/*  CALCULATOR OUTPUT DISPLAY BOX */
+/*  CALCULATOR OUTPUT-DISPLAY BOX */
 .display.container {
   padding: 10px;
   display: flex;
