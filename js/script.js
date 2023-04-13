@@ -148,4 +148,4 @@ for (const [name, btnEl] of Object.entries(operatorBtns)) {
 
 //  Equals button
 const equalsBtn = document.querySelector(".btn.equals");
-equalsBtn.addEventListener("click", () => operate());
+equalsBtn.addEventListener("click", () => sendNumToDisplay(event.target.value));

@@ -88,7 +88,7 @@ A simple calculator app which runs in the browser. It displays one number at a t
    4. ### Design the processing flow: 
    Also simultaneously: defining the sequence of steps that the input data will go through to produce the output data:
 
-   [] NEXT TASK: Set the value of each button in its html el, and pass it to js directly. This will allow the js to be much more high-level and simplified, with no specific button details there. It'll make the logic much clearer...
+   [xi] NEXT TASK: Set the value of each button in its html el, and pass it to js directly. This will allow the js to be much more high-level and simplified, with no specific button details there. It'll make the logic much clearer...
 
       1. Initialize the calculator with an empty input value and an empty output value.
          a. [x] Call an initializer function
