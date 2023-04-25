@@ -1,31 +1,57 @@
 // OPERATION VARS
 const inObj = {
-  input: '',
-  a: '',
-  operator: '',
-  b: '',
+  input: "",
+  a: "",
+  operator: "",
+  b: "",
 };
 
 const outObj = {
-  output: 0,
+  output: "",
   state: "input mode",
 };
 
 // FUNC: Set variable object keys to initial values
 function initialize() {
   // Set all inObj keys to null
-  Object.keys(inObj).forEach((key) => (inObj[key] = null));
+  Object.keys(inObj).forEach((key) => (inObj[key] = ""));
   // Set outObj keys to initial values
-  outObj.output = 0;
+  outObj.output = "0";
   outObj.state = "input mode";
 
   // Display initial output value
-  displayOutput();
+  sendToDisplay(outObj.output);
+}
+
+// FUNC:
+function filterNumBtnInputStr(btnStr) {
+  const numStrsArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  if (btnStr.length <= 10) {
+    if (btnStr === "." && !inObj.input.includes(".")) {
+      return btnStr;
+    } else if (numStrsArr.includes(btnStr)) {
+      return btnStr;
+    }
+  }
+}
+
+function appendToInputStr(btnStr) {
+  inObj.input += btnStr;
+}
+
+function processNumInput() {
+  if (outObj.state === "input mode" || outObj.state === "result mode") {
+    sendToDisplay(inObj.input);
+  } else if (outObj.state === "operator mode") {
+    inObj.b = inObj.input;
+    sendToDisplay(inObj.b);
+  }
 }
 
 //FUNC: Display the current output value
-function displayOutput() {
-  display.textContent = outObj.output;
+function sendToDisplay(btnStr) {
+  display.textContent = btnStr;
 }
 
 // Operator Functions:
@@ -69,7 +95,7 @@ function divide(a, b) {
   return a / b;
 }
 
-// FUNC: Take operator button inputs and place the relevant operator function into opObj.operator 
+// FUNC: Take operator button inputs and place the relevant operator function into opObj.operator
 function getSelectedOperatorFunction(opStr) {
   //  Type-check arguments
   if (typeof opStr === "string") {
@@ -96,6 +122,20 @@ function updateCurrentOperator(opFunc) {
   inObj.operator = opFunc;
 }
 
+function performOperation() {
+  if (outObj.state === "operator mode") {
+    inObj.b = inObj.input;
+
+    const a = Number(inObj.a);
+    const b = Number(inObj.b);
+
+    const opResult =  inObj.operator(a, b);
+
+    outObj.result = opResult;
+
+    sendNumToDisplay(opResult);
+  }
+}
 
 // --- EVENT HANDLERS ---
 
@@ -106,20 +146,26 @@ function handleACBtnInput(event) {
 
 // HANDLER: Number button click
 function handleNumBtnClick(event) {
-  if (outObj.state === "input mode" || outObj.state === "result mode") {
-    inObj.input += event.target.value;
-  } else if (outObj.state === "operator mode") {
-    inObj.b = event.target.value;
+  // Call filterNumBtnInputStr() and store the result in a variable
+  const filteredInput = filterNumBtnInputStr(event.target.value);
+
+  // Check if the filtered input is not null or undefined, and pass it to processNumInput()
+  if (filteredInput != null) {
+    appendToInputStr(filteredInput);
+    processNumInput();
   }
-  displayOutput();
 }
 
 function handleOpBtnClick(event) {
   const opFunc = getSelectedOperatorFunction(event.target.value);
-  if ( opFunc ) {
-    updateCurrentOperator( opFunc );
+  if (opFunc) {
+    updateCurrentOperator(opFunc);
     outObj.state = "operator mode";
   }
+}
+
+function handleEqualsBtnClick() {
+  performOperation(inObj.operator);
 }
 
 // --- GET ELEMENTS + ATTACH EVENT LISTENERS ---
@@ -155,9 +201,13 @@ const modifierBtns = {
   percent: document.querySelector(".btn.modifier.modulus"),
 };
 
-modifierBtns["clear"].addEventListener("click", () => sendNumToDisplay(event.target.value));
-modifierBtns["sign"].addEventListener("click", () => sendNumToDisplay(event.target.value));
-modifierBtns["percent"].addEventListener("click", () => sendNumToDisplay(event.target.value));
+modifierBtns["clear"].addEventListener("click", handleACBtnInput);
+modifierBtns["sign"].addEventListener("click", () =>
+  sendNumToDisplay(event.target.value)
+);
+modifierBtns["percent"].addEventListener("click", () =>
+  sendNumToDisplay(event.target.value)
+);
 
 //  Operator buttons
 const operatorBtns = {
@@ -178,13 +228,12 @@ equalsBtn.addEventListener("click", handleEqualsBtnClick);
 
 // ----------------------------------------------------------------
 
-
 // *** Temporary functions ****
 
 // FUNC: Update the display with a string from any number button
 function sendNumToDisplay(event) {
   outObj.output = event.target.value;
-  displayOutput();
+  sendToDisplay();
 }
 
 // *** ***
