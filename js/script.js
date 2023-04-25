@@ -1,10 +1,9 @@
 // OPERATION VARS
 const inObj = {
-  input: null,
-  a: null,
-  operator: null,
-  b: null,
-  modifier: null,
+  input: '',
+  a: '',
+  operator: '',
+  b: '',
 };
 
 const outObj = {
@@ -70,33 +69,60 @@ function divide(a, b) {
   return a / b;
 }
 
-// function operate(operator) {
-//   //  Type-check arguments
-//   if (typeof operator === "string") {
-//     //  Depending on the operator passed in, call the appropriate operation function on the input.
-//     switch (operator) {
-//       case "+":
-//         return add(a, b);
-//       case "-":
-//         return subtract(a, b);
-//       case "*":
-//         return multiply(a, b);
-//       case "/":
-//         return divide(a, b);
-//       default:
-//         console.error(`${operator} is not a valid operator`);
-//     }
-//   } else {
-//     // If type-check fails, log an error to the console.
-//     console.error(`Invalid input: Wrong data type`);
-//   }
-// }
+// FUNC: Take operator button inputs and place the relevant operator function into opObj.operator 
+function getSelectedOperatorFunction(opStr) {
+  //  Type-check arguments
+  if (typeof opStr === "string") {
+    //  Depending on the operator passed in, call the appropriate operation function on the input.
+    switch (opStr) {
+      case "+":
+        return add;
+      case "-":
+        return subtract;
+      case "*":
+        return multiply;
+      case "/":
+        return divide;
+      default:
+        console.error(`${opStr} is not a valid operator string`);
+    }
+  } else {
+    // If type-check fails, log an error to the console.
+    console.error(`Invalid input: Wrong data type`);
+  }
+}
 
-// FUNC: Update the display with a string from any number button
-function sendNumToDisplay(a) {
-  outObj.output = a;
+function updateCurrentOperator(opFunc) {
+  inObj.operator = opFunc;
+}
+
+
+// --- EVENT HANDLERS ---
+
+// HANDLER: 'AC' button click
+function handleACBtnInput(event) {
+  initialize(); // Set variable objects inObj and outObj to initial values
+}
+
+// HANDLER: Number button click
+function handleNumBtnClick(event) {
+  if (outObj.state === "input mode" || outObj.state === "result mode") {
+    inObj.input += event.target.value;
+  } else if (outObj.state === "operator mode") {
+    inObj.b = event.target.value;
+  }
   displayOutput();
 }
+
+function handleOpBtnClick(event) {
+  const opFunc = getSelectedOperatorFunction(event.target.value);
+  if ( opFunc ) {
+    updateCurrentOperator( opFunc );
+    outObj.state = "operator mode";
+  }
+}
+
+// --- GET ELEMENTS + ATTACH EVENT LISTENERS ---
 
 //  Get reference to Display
 const display = document.querySelector(".display.txt");
@@ -119,7 +145,7 @@ const numBtns = {
 };
 
 for (const btnEl of Object.values(numBtns)) {
-  btnEl.addEventListener("click", () => sendNumToDisplay(btnEl.value));
+  btnEl.addEventListener("click", handleNumBtnClick);
 }
 
 // Modifier buttons
@@ -143,9 +169,22 @@ const operatorBtns = {
 };
 
 for (const [name, btnEl] of Object.entries(operatorBtns)) {
-  btnEl.addEventListener("click", () => sendNumToDisplay(event.target.value));
+  btnEl.addEventListener("click", handleOpBtnClick);
 }
 
 //  Equals button
 const equalsBtn = document.querySelector(".btn.equals");
-equalsBtn.addEventListener("click", () => operate());
+equalsBtn.addEventListener("click", handleEqualsBtnClick);
+
+// ----------------------------------------------------------------
+
+
+// *** Temporary functions ****
+
+// FUNC: Update the display with a string from any number button
+function sendNumToDisplay(event) {
+  outObj.output = event.target.value;
+  displayOutput();
+}
+
+// *** ***
