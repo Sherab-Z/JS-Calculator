@@ -194,20 +194,18 @@ for (const btnEl of Object.values(numBtns)) {
   btnEl.addEventListener("click", handleNumBtnClick);
 }
 
+// Clear (AC) button
+const clearBtn = document.querySelector(".btn.modifier.clear");
+clearBtn.addEventListener("click", handleACBtnInput);
+
 // Modifier buttons
 const modifierBtns = {
-  clear: document.querySelector(".btn.modifier.clear"),
   sign: document.querySelector(".btn.modifier.sign"),
   percent: document.querySelector(".btn.modifier.modulus"),
 };
 
-modifierBtns["clear"].addEventListener("click", handleACBtnInput);
-modifierBtns["sign"].addEventListener("click", () =>
-  sendNumToDisplay(event.target.value)
-);
-modifierBtns["percent"].addEventListener("click", () =>
-  sendNumToDisplay(event.target.value)
-);
+modifierBtns["sign"].addEventListener("click", handleModBtnInput);
+modifierBtns["percent"].addEventListener("click", handleModBtnInput);
 
 //  Operator buttons
 const operatorBtns = {
