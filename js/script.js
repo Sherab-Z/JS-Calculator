@@ -13,17 +13,21 @@ const outObj = {
 
 // FUNC: Set variable object keys to initial values
 function initialize() {
-  // Set all inObj keys to null
-  Object.keys(inObj).forEach((key) => (inObj[key] = ""));
-  // Set outObj keys to initial values
+  // Initialize inObj keys
+  inObj.input = "";
+  inObj.a = "";
+  inObj.operator = "";
+  inObj.b = "";
+
+  // Initialize outObj keys
   outObj.output = "0";
   outObj.state = "input mode";
 
   // Display initial output value
-  sendToDisplay(outObj.output);
+  displayCurrentOutput();
 }
 
-// FUNC:
+// FUNC: Validate input num str and determine whether it can be appended to inObj.input
 function filterNumBtnInputStr(btnStr) {
   const numStrsArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
@@ -42,16 +46,34 @@ function appendToInputStr(btnStr) {
 
 function processNumInput() {
   if (outObj.state === "input mode" || outObj.state === "result mode") {
-    sendToDisplay(inObj.input);
+    displayCurrentOutput();
   } else if (outObj.state === "operator mode") {
     inObj.b = inObj.input;
-    sendToDisplay(inObj.b);
+    displayCurrentOutput();
   }
 }
 
 //FUNC: Display the current output value
-function sendToDisplay(btnStr) {
-  display.textContent = btnStr;
+function displayCurrentOutput() {
+  if ( outObj.state === "input mode") {
+    display.textContent = inObj.input;
+  } else if (outObj.state === "operator mode") {
+    display.textContent = inObj.b;
+  } else if (outObj.state === "result mode") {
+    display.textContent = outObj.result;
+  } else {
+    throw new Error("No valid mode specified - cannot display output");
+  }
+}
+
+function toggleNumSign() {
+  inObj.input *= -1;
+  displayCurrentOutput();
+}
+
+function turnNumIntoPercentage() {
+  inObj.input *= 0.01;
+  displayCurrentOutput();
 }
 
 // Operator Functions:
@@ -140,8 +162,23 @@ function performOperation() {
 // --- EVENT HANDLERS ---
 
 // HANDLER: 'AC' button click
-function handleACBtnInput(event) {
+function handleACBtnInput() {
   initialize(); // Set variable objects inObj and outObj to initial values
+}
+
+function handleModBtnInput(event) {
+  const mod = event.target.value;
+
+  switch (mod) {
+    case "+/-" :
+      toggleNumSign();
+      break;
+    case "%" :
+      turnNumIntoPercentage();
+      break;
+    default:
+      console.log("Error: no valid modifier string recieved by event handler (handleModBtnInput)");
+  }
 }
 
 // HANDLER: Number button click
@@ -231,7 +268,7 @@ equalsBtn.addEventListener("click", handleEqualsBtnClick);
 // FUNC: Update the display with a string from any number button
 function sendNumToDisplay(event) {
   outObj.output = event.target.value;
-  sendToDisplay();
+  displayCurrentOutput();
 }
 
 // *** ***
