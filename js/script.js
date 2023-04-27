@@ -6,6 +6,12 @@ const inObj = {
   b: "",
 };
 
+const toggleIndividualInputsObj = {
+  decimalApplied : false,
+  percentApplied : false,
+  inputStarted : false,
+}
+
 const outObj = {
   output: "",
   state: "input mode",
@@ -18,6 +24,15 @@ function initialize() {
   inObj.a = "";
   inObj.operator = "";
   inObj.b = "";
+
+  // Initialize temporary variables
+  const tempObj = toggleIndividualInputsObj
+  for (let key in tempObj) {
+    if (tempObj.hasOwnProperty(key)) {
+      tempObj[key] = false;
+    }
+  };
+  
 
   // Initialize outObj keys
   outObj.output = "0";
@@ -74,7 +89,7 @@ function toggleNumSign() {
 function turnNumIntoPercentage() {
   inObj.input *= 0.01;
   displayCurrentOutput();
-}
+} // TODO: This should only work once for each num, and after it's clicked the state should change and any new num btn clicks should start a new number input
 
 // Operator Functions:
 // FUNC: add a and b, return the result
