@@ -11,8 +11,8 @@ const toggleObj = {
 };
 
 const outObj = {
-  output: "",
-  state: "input mode",
+  result: "",
+  state: "ready mode",  // 4 States: ready mode, input mode, operator mode & result mode.
 };
 
 // FUNC: Set variable object keys to initial values
@@ -51,7 +51,10 @@ function appendToInputStr(btnStr) {
 }
 
 function processNumInput() {
-  if (outObj.state === "input mode" || outObj.state === "result mode") {
+  if (outObj.state === "start mode") {
+    outObj.state === "input mode";
+    displayCurrentOutput();
+  } else if (outObj.state === "input mode" || outObj.state === "result mode") {
     displayCurrentOutput();
   } else if (outObj.state === "operator mode") {
     inObj.b = inObj.input;
@@ -86,43 +89,23 @@ function turnNumIntoPercentage() {
 
 // Operator Functions:
 // FUNC: add a and b, return the result
-function add(a, b) {
-  // Update properties in inObj
-  inObj.a = a;
-  inObj.b = b;
-
-  // Return the sum.
-  return a + b;
+function add() {
+  return inObj.a + inObj.b;
 }
 
 // FUNC: subtract b from a, return the result
-function subtract(a, b) {
-  // Update properties in inObj
-  inObj.a = a;
-  inObj.b = b;
-
-  // Return the result.
-  return a - b;
+function subtract() {
+  return inObj.a - inObj.b;
 }
 
 // FUNC: multiply a and b, return the result
-function multiply(a, b) {
-  // Update properties in inObj
-  inObj.a = a;
-  inObj.b = b;
-
-  // Return the result.
-  return a * b;
+function multiply() {
+  return inObj.a * inObj.b;
 }
 
 // FUNC: divide a by b, return the result
-function divide(a, b) {
-  // Update properties in inObj
-  inObj.a = a;
-  inObj.b = b;
-
-  // Return the result.
-  return a / b;
+function divide() {
+  return inObj.a / inObj.b;
 }
 
 // FUNC: Take operator button inputs and place the relevant operator function into opObj.operator
@@ -164,6 +147,8 @@ function performOperation() {
     outObj.result = opResult;
 
     sendNumToDisplay(opResult);
+  } else if (outObj.state === "input mode" || outObj.state === "input mode") {
+
   }
 }
 
@@ -279,7 +264,7 @@ equalsBtn.addEventListener("click", handleEqualsBtnClick);
 
 // FUNC: Update the display with a string from any number button
 function sendNumToDisplay(event) {
-  outObj.output = event.target.value;
+  outObj.result = event.target.value;
   displayCurrentOutput();
 }
 
