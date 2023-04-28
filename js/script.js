@@ -6,10 +6,6 @@ const inObj = {
   b: "",
 };
 
-const toggleObj = {
-  decimalApplied: false,
-};
-
 const outObj = {
   result: "",
   state: "ready mode",  // 4 States: ready mode, input mode, operator mode & result mode.
@@ -23,9 +19,6 @@ function initialize() {
   inObj.operator = "";
   inObj.b = "";
 
-  // Initialize temporary variables
-  toggleObj.decimalApplied = false;
-
   // Initialize outObj keys
   outObj.state = "start mode";
 
@@ -37,7 +30,7 @@ function initialize() {
 function filterNumBtnInputStr(btnStr) {
   const numStrsArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-  if (btnStr.length <= 10) {
+  if (inObj.input.length <= 10) {
     if (btnStr === "." && !inObj.input.includes(".")) {
       return btnStr;
     } else if (numStrsArr.includes(btnStr)) {
