@@ -8,7 +8,7 @@ const inObj = {
 
 const outObj = {
   result: "",
-  state: "ready mode",  // 4 States: ready mode, input mode, operator mode & result mode.
+  state: "ready mode", // 4 States: ready mode, input mode, operator mode & result mode.
 };
 
 // FUNC: Set variable object keys to initial values
@@ -41,6 +41,9 @@ function filterNumBtnInputStr(btnStr) {
 
 function appendToInputStr(btnStr) {
   inObj.input += btnStr;
+  if (outObj.state === "operator mode") {
+    inObj.b = inObj.input;
+  }
 }
 
 function processNumInput() {
@@ -82,23 +85,23 @@ function turnNumIntoPercentage() {
 
 // Operator Functions:
 // FUNC: add a and b, return the result
-function add() {
-  return inObj.a + inObj.b;
+function add(a, b) {
+  return a + b;
 }
 
 // FUNC: subtract b from a, return the result
-function subtract() {
-  return inObj.a - inObj.b;
+function subtract(a, b) {
+  return a - b;
 }
 
 // FUNC: multiply a and b, return the result
-function multiply() {
-  return inObj.a * inObj.b;
+function multiply(a, b) {
+  return a * b;
 }
 
 // FUNC: divide a by b, return the result
-function divide() {
-  return inObj.a / inObj.b;
+function divide(a, b) {
+  return a / b;
 }
 
 // FUNC: Take operator button inputs and place the relevant operator function into opObj.operator
@@ -128,20 +131,29 @@ function updateCurrentOperator(opFunc) {
   inObj.operator = opFunc;
 }
 
+function setOperandA() {
+  inObj.a = inObj.input;
+  inObj.input = "";
+}
+
+function setOperandB() {
+  inObj.b = inObj.input;
+  inObj.input = "";
+}
+
 function performOperation() {
   if (outObj.state === "operator mode") {
-    inObj.b = inObj.input;
+    setOperandB();
 
     const a = Number(inObj.a);
     const b = Number(inObj.b);
 
-    const opResult = inObj.operator(a, b);
+    outObj.result = inObj.operator(a, b);
+    outObj.state = "result mode";
 
-    outObj.result = opResult;
-
-    sendNumToDisplay(opResult);
-  } else if (outObj.state === "input mode" || outObj.state === "input mode") {
-
+    displayCurrentOutput();
+  } else if (outObj.state === "input mode" || outObj.state === "result mode") {
+    
   }
 }
 
@@ -186,13 +198,14 @@ function handleNumBtnClick(event) {
 function handleOpBtnClick(event) {
   const opFunc = getSelectedOperatorFunction(event.target.value);
   if (opFunc) {
-    updateCurrentOperator(opFunc);
     outObj.state = "operator mode";
+    updateCurrentOperator(opFunc);
+    setOperandA();
   }
 }
 
 function handleEqualsBtnClick() {
-  performOperation(inObj.operator);
+  performOperation();
 }
 
 // --- GET ELEMENTS + ATTACH EVENT LISTENERS ---
