@@ -6,11 +6,9 @@ const inObj = {
   b: "",
 };
 
-const toggleIndividualInputsObj = {
-  decimalApplied : false,
-  percentApplied : false,
-  inputStarted : false,
-}
+const toggleObj = {
+  decimalApplied: false,
+};
 
 const outObj = {
   output: "",
@@ -26,17 +24,10 @@ function initialize() {
   inObj.b = "";
 
   // Initialize temporary variables
-  const tempObj = toggleIndividualInputsObj
-  for (let key in tempObj) {
-    if (tempObj.hasOwnProperty(key)) {
-      tempObj[key] = false;
-    }
-  };
-  
+  toggleObj.decimalApplied = false;
 
   // Initialize outObj keys
-  outObj.output = "0";
-  outObj.state = "input mode";
+  outObj.state = "start mode";
 
   // Display initial output value
   displayCurrentOutput();
@@ -70,7 +61,9 @@ function processNumInput() {
 
 //FUNC: Display the current output value
 function displayCurrentOutput() {
-  if ( outObj.state === "input mode") {
+  if (outObj.state === "start mode") {
+    display.textContent = "0";
+  } else if (outObj.state === "input mode") {
     display.textContent = inObj.input;
   } else if (outObj.state === "operator mode") {
     display.textContent = inObj.b;
@@ -89,7 +82,7 @@ function toggleNumSign() {
 function turnNumIntoPercentage() {
   inObj.input *= 0.01;
   displayCurrentOutput();
-} // TODO: This should only work once for each num, and after it's clicked the state should change and any new num btn clicks should start a new number input
+}
 
 // Operator Functions:
 // FUNC: add a and b, return the result
@@ -166,7 +159,7 @@ function performOperation() {
     const a = Number(inObj.a);
     const b = Number(inObj.b);
 
-    const opResult =  inObj.operator(a, b);
+    const opResult = inObj.operator(a, b);
 
     outObj.result = opResult;
 
@@ -185,24 +178,28 @@ function handleModBtnInput(event) {
   const mod = event.target.value;
 
   switch (mod) {
-    case "+/-" :
+    case "+/-":
       toggleNumSign();
       break;
-    case "%" :
+    case "%":
       turnNumIntoPercentage();
       break;
     default:
-      console.log("Error: no valid modifier string recieved by event handler (handleModBtnInput)");
+      console.log(
+        "Error: no valid modifier string recieved by event handler (handleModBtnInput)"
+      );
   }
 }
 
 // HANDLER: Number button click
 function handleNumBtnClick(event) {
   // Call filterNumBtnInputStr() and store the result in a variable
+
   const filteredInput = filterNumBtnInputStr(event.target.value);
 
   // Check if the filtered input is not null or undefined, and pass it to processNumInput()
   if (filteredInput != null) {
+    outObj.state = "input mode";
     appendToInputStr(filteredInput);
     processNumInput();
   }
