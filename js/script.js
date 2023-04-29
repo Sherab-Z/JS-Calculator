@@ -8,6 +8,7 @@ const inObj = {
 
 const outObj = {
   result: "",
+  toDisplay: "",
   state: "ready mode", // 4 States: ready mode, input mode, operator mode & result mode.
 };
 
@@ -30,12 +31,10 @@ function initialize() {
 function filterNumBtnInputStr(btnStr) {
   const numStrsArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-  if (inObj.input.length <= 10) {
-    if (btnStr === "." && !inObj.input.includes(".")) {
-      return btnStr;
-    } else if (numStrsArr.includes(btnStr)) {
-      return btnStr;
-    }
+  if (btnStr === "." && !inObj.input.includes(".")) {
+    return btnStr;
+  } else if (numStrsArr.includes(btnStr)) {
+    return btnStr;
   }
 }
 
@@ -61,17 +60,39 @@ function processNumInput() {
 //FUNC: Display the current output value
 function displayCurrentOutput() {
   if (outObj.state === "start mode") {
-    display.textContent = "0";
+    outObj.toDisplay = "0";
   } else if (outObj.state === "input mode") {
-    display.textContent = inObj.input;
+    outObj.toDisplay = inObj.input;
   } else if (outObj.state === "operator mode") {
-    display.textContent = inObj.b;
+    outObj.toDisplay = inObj.b;
   } else if (outObj.state === "result mode") {
-    display.textContent = outObj.result;
+    outObj.toDisplay = outObj.result;
   } else {
     throw new Error("No valid mode specified - cannot display output");
   }
+
+  const displayNum = outObj.toDisplay;
+
+  if ( displayNum.toString.length > 10 ) displayNum = formatNumberScientifically( displayNum );
+
+  display.textContent = outObj.toDisplay;
 }
+  
+  function formatNumberScientifically(number) {
+    const maxLength = 10;
+    const numberStr = number.toString();
+  
+    if (numberStr.length <= maxLength) {
+      return numberStr; // No need to convert to scientific notation.
+    }
+  
+    // Convert to scientific notation and round the significant digits
+    const orderOfMagnitude = Math.floor(Math.log10(Math.abs(number)));
+    const significantDigits = maxLength - (orderOfMagnitude >= 0 ? 2 : 3); // Adjust for sign, decimal point, and exponent symbol.
+    const roundedCoefficient = parseFloat(number / Math.pow(10, orderOfMagnitude)).toFixed(significantDigits - 1);
+    return `${roundedCoefficient}e${orderOfMagnitude}`;
+  }
+  
 
 function toggleNumSign() {
   inObj.input *= -1;
@@ -153,7 +174,6 @@ function performOperation() {
 
     displayCurrentOutput();
   } else if (outObj.state === "input mode" || outObj.state === "result mode") {
-    
   }
 }
 
