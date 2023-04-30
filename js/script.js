@@ -75,35 +75,45 @@ function displayCurrentOutput() {
     throw new Error("No valid mode specified - cannot display output");
   }
 
-  if ( toDisplay.toString().length > 10 ) {
-    toDisplay = formatNumberScientifically( toDisplay );
-  } 
+  if (toDisplay.toString().length > 10) {
+    toDisplay = formatNumberScientifically(toDisplay);
+  }
 
   display.textContent = toDisplay;
 }
-  
-  function formatNumberScientifically(number) {
-    console.log("formatNumberScientifically() called");
 
-    const maxLength = 9;
-    const numberStr = number.toString();
-  
-    if (numberStr.length <= maxLength) {
-      return numberStr; // No need to convert to scientific notation.
-    }
-  
-    // Convert to scientific notation and round the significant digits
-    const orderOfMagnitude = Math.floor(Math.log10(Math.abs(number)));
-    const significantDigits = maxLength - (orderOfMagnitude >= 0 ? 2 : 3); // Adjust for sign, decimal point, and exponent symbol.
-    const roundedCoefficient = parseFloat(number / Math.pow(10, orderOfMagnitude)).toFixed(significantDigits - 1);
-    return `${roundedCoefficient}e${orderOfMagnitude}`;
+function formatNumberScientifically(number) {
+  console.log("formatNumberScientifically() called");
+
+  const maxLength = 9;
+  const numberStr = number.toString();
+
+  if (numberStr.length <= maxLength) {
+    return numberStr; // No need to convert to scientific notation.
   }
-  
+
+  // Convert to scientific notation and round the significant digits
+  const orderOfMagnitude = Math.floor(Math.log10(Math.abs(number)));
+  const significantDigits = maxLength - (orderOfMagnitude >= 0 ? 2 : 3); // Adjust for sign, decimal point, and exponent symbol.
+  const roundedCoefficient = parseFloat(
+    number / Math.pow(10, orderOfMagnitude)
+  ).toFixed(significantDigits - 1);
+  return `${roundedCoefficient}e${orderOfMagnitude}`;
+}
 
 function toggleNumSign() {
-  inObj.input *= -1;
+  // Convert the input string to a number.
+  const number = parseFloat(inObj.input);
+
+  // Toggle the sign.
+  const toggledNumber = number * -1;
+
+  // Update the input value and display.
+  const toggledNumberStr = toggledNumber.toString();
+  inObj.input = toggledNumberStr.length > 10 ? formatNumberScientifically(toggledNumber) : toggledNumberStr;
   displayCurrentOutput();
 }
+
 
 function turnNumIntoPercentage() {
   inObj.input *= 0.01;
@@ -179,10 +189,18 @@ function performOperation() {
     outObj.state = "result mode";
 
     displayCurrentOutput();
-  } else if (outObj.state === "input mode" || outObj.state === "result mode") {
+  } else if (outObj.state === "input mode") {
+    outObj.result = inObj.input;
+    inObj.input = "";
+    outObj.state = "result mode";
+
+    displayCurrentOutput();
+  } else if (outObj.state === "result mode") {
+    // Do nothing
+  } else if (outObj.state === "start mode") {
+
   }
 }
-
 // --- EVENT HANDLERS ---
 
 // HANDLER: 'AC' button click
