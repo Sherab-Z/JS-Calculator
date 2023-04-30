@@ -8,7 +8,6 @@ const inObj = {
 
 const outObj = {
   result: "",
-  toDisplay: "",
   state: "ready mode", // 4 States: ready mode, input mode, operator mode & result mode.
 };
 
@@ -179,6 +178,8 @@ function setOperandB() {
 }
 
 function performOperation() {
+  console.log(`performOperation(), inObj: [input: ${inObj.input}, a: ${inObj.a}, op: ${inObj.operator}, b: ${inObj.b}] outObj: [result: ${outObj.result}, state: ${outObj.state}]`);
+
   if (outObj.state === "operator mode") {
     setOperandB();
 
@@ -312,10 +313,6 @@ equalsBtn.addEventListener("click", handleEqualsBtnClick);
 
 // *** Temporary functions ****
 
-// FUNC: Update the display with a string from any number button
-function sendNumToDisplay(event) {
-  outObj.result = event.target.value;
-  displayCurrentOutput();
-}
+
 
 // *** ***
