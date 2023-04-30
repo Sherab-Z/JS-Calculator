@@ -59,27 +59,33 @@ function processNumInput() {
 
 //FUNC: Display the current output value
 function displayCurrentOutput() {
+  console.log("displayCurrentOutput() called");
+
+  let toDisplay = "";
+
   if (outObj.state === "start mode") {
-    outObj.toDisplay = "0";
+    toDisplay = "0";
   } else if (outObj.state === "input mode") {
-    outObj.toDisplay = inObj.input;
+    toDisplay = inObj.input;
   } else if (outObj.state === "operator mode") {
-    outObj.toDisplay = inObj.b;
+    toDisplay = inObj.b;
   } else if (outObj.state === "result mode") {
-    outObj.toDisplay = outObj.result;
+    toDisplay = outObj.result;
   } else {
     throw new Error("No valid mode specified - cannot display output");
   }
 
-  const displayNum = outObj.toDisplay;
+  if ( toDisplay.toString().length > 10 ) {
+    toDisplay = formatNumberScientifically( toDisplay );
+  } 
 
-  if ( displayNum.toString.length > 10 ) displayNum = formatNumberScientifically( displayNum );
-
-  display.textContent = outObj.toDisplay;
+  display.textContent = toDisplay;
 }
   
   function formatNumberScientifically(number) {
-    const maxLength = 10;
+    console.log("formatNumberScientifically() called");
+
+    const maxLength = 9;
     const numberStr = number.toString();
   
     if (numberStr.length <= maxLength) {
