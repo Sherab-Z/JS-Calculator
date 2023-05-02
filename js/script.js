@@ -1,4 +1,4 @@
-// OPERATION VARS
+// --- VARIABLE OBJECTS ------------------------------ //
 const inputObj = {
   inputStr: "",
   operandA: "",
@@ -11,6 +11,65 @@ const outputObj = {
   state: "ready", // 4 States: ready, input, operator & result.
 };
 
+// --- EVENT HANDLERS ------------------------------ //
+
+// HANDLER: Number button click
+function handleNumberButtonClick(event) {
+  // Filter the input string and store in a variable 
+
+  const filteredInput = filterNumberButtonInput(event.target.value);
+
+  // Check if the filtered input is not null or undefined, and pass it to updateInputStateAndDisplay()
+  if (filteredInput != null) {
+    outputObj.state = "input";
+    addToInputStr(filteredInput);
+    updateInputStateAndDisplay();
+  }
+}
+
+function handleModifierButtonClick(event) {
+  const modifier = event.target.value;
+
+  switch (modifier) {
+    case "+/-":
+      toggleNumberSign();
+      break;
+    case "%":
+      convertToPercentage();
+      break;
+    default:
+      throw new Error (
+        "Error: no valid modifier string received by event handler (handleModifierButtonClick)"
+      );
+  }
+}
+
+function handleOperatorButtonClick(event) {
+  const operatorFunc = getSelectedOperatorFunction(event.target.value);
+
+  if (operatorFunc) {
+    setOperandA();
+
+    if (inputObj.operator && inputObj.operandA && inputObj.operandB) {
+      executeOperation();
+    }
+
+    outputObj.state = "operator";
+    setOperatorFunction(operatorFunc);
+  }
+  console.table([inputObj, outputObj]);
+}
+
+function handleEqualsButtonClick() {
+  executeOperation();
+}
+// HANDLER: 'AC' button click
+function handleClearButtonClick() {
+  resetCalculator(); // Set variable objects inputObj and outputObj to initial values
+}
+
+// --- FUNCTIONS ------------------------------- //
+
 // FUNC: Set variable object keys to initial values
 function resetCalculator() {
   // Initialize inputObj keys
@@ -20,13 +79,14 @@ function resetCalculator() {
   inputObj.operandB = "";
 
   // Initialize outputObj keys
+  outputObj.result = "";
   outputObj.state = "ready";
 
   // Display initial output value
   updateDisplay();
 }
 
-// FUNC: Validate input num str and determine whether it can be appended to inputObj.inputStr
+// FUNC: Validate input number string and determine whether it can be appended to inputObj.inputStr
 function filterNumberButtonInput(btnStr) {
   const numStrsArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
@@ -40,25 +100,17 @@ function filterNumberButtonInput(btnStr) {
 function addToInputStr(btnStr) {
   inputObj.inputStr += btnStr;
   if (outputObj.state === "operator") {
-    inputObj.b = inputObj.inputStr;
+    inputObj.operandB = inputObj.inputStr;
   }
 }
 
-function handleNumericInput() {
-  if (outputObj.state === "ready") {
-    outputObj.state === "input";
+function updateInputStateAndDisplay() {
+    outputObj.state = "input";
     updateDisplay();
-  } else if (outputObj.state === "input" || outputObj.state === "result") {
-    updateDisplay();
-  } else if (outputObj.state === "operator") {
-    inputObj.b = inputObj.inputStr;
-    updateDisplay();
-  }
 }
 
 //FUNC: Display the current output value
 function updateDisplay() {
-  console.log("updateDisplay() called");
 
   let toDisplay = "";
 
@@ -67,7 +119,7 @@ function updateDisplay() {
   } else if (outputObj.state === "input") {
     toDisplay = inputObj.inputStr;
   } else if (outputObj.state === "operator") {
-    toDisplay = inputObj.b;
+    toDisplay = inputObj.operandB;
   } else if (outputObj.state === "result") {
     toDisplay = outputObj.result;
   } else {
@@ -79,10 +131,11 @@ function updateDisplay() {
   }
 
   display.textContent = toDisplay;
+
+  console.table([inputObj, outputObj]);
 }
 
 function formatNumberScientifically(number) {
-  console.log("formatNumberScientifically() called");
 
   const maxLength = 9;
   const numberStr = number.toString();
@@ -143,7 +196,7 @@ function divide(a, b) {
 }
 
 // FUNC: Take operator button inputs and place the relevant operator function into opObj.operator
-function setSelectedOperatorFunction(operatorStr) {
+function getSelectedOperatorFunction(operatorStr) {
   //  Type-check arguments
   if (typeof operatorStr === "string") {
     //  Depending on the operator passed in, call the appropriate operation function on the input.
@@ -165,8 +218,9 @@ function setSelectedOperatorFunction(operatorStr) {
   }
 }
 
-function updateOperatorFunction(operatorFunc) {
+function setOperatorFunction(operatorFunc) {
   inputObj.operator = operatorFunc;
+  outputObj.state = "operator";
 }
 
 function setOperandA() {
@@ -175,20 +229,18 @@ function setOperandA() {
 }
 
 function setOperandB() {
-  inputObj.b = inputObj.inputStr;
+  inputObj.operandB = inputObj.inputStr;
   inputObj.inputStr = "";
 }
 
 function executeOperation() {
-  console.log(
-    `executeOperation(), inputObj: [input: ${inputObj.inputStr}, a: ${inputObj.operandA}, op: ${inputObj.operator}, b: ${inputObj.b}] outputObj: [result: ${outputObj.result}, state: ${outputObj.state}]`
-  );
+  // TODO: Fix bug - after operator btn click, number input sets state back to "input", but it should stay in "operator" state
 
   if (outputObj.state === "operator") {
     setOperandB();
 
     const a = Number(inputObj.operandA);
-    const b = Number(inputObj.b);
+    const b = Number(inputObj.operandB);
 
     outputObj.result = inputObj.operator(a, b);
     outputObj.state = "result";
@@ -200,63 +252,17 @@ function executeOperation() {
     outputObj.state = "result";
 
     updateDisplay();
-  } else if (outputObj.state === "result") {
+  } else if (outputObj.state === "result" || outputObj.state === "ready") {
     // Do nothing
-  } else if (outputObj.state === "ready") {
   }
-}
-// --- EVENT HANDLERS ---
 
-// HANDLER: 'AC' button click
-function handleClearButtonClick() {
-  resetCalculator(); // Set variable objects inputObj and outputObj to initial values
+  console.log(
+    `executeOperation(), inputObj: [input: ${inputObj.inputStr}, a: ${inputObj.operandA}, op: ${inputObj.operator}, b: ${inputObj.operandB}] outputObj: [result: ${outputObj.result}, state: ${outputObj.state}]`
+  );
 }
 
-function handleModifierButtonClick(event) {
-  const modifier = event.target.value;
 
-  switch (modifier) {
-    case "+/-":
-      toggleNumberSign();
-      break;
-    case "%":
-      convertToPercentage();
-      break;
-    default:
-      console.log(
-        "Error: no valid modifier string recieved by event handler (handleModifierButtonClick)"
-      );
-  }
-}
-
-// HANDLER: Number button click
-function handleNumberButtonClick(event) {
-  // Filter the input string and store in a variable 
-
-  const filteredInput = filterNumberButtonInput(event.target.value);
-
-  // Check if the filtered input is not null or undefined, and pass it to handleNumericInput()
-  if (filteredInput != null) {
-    outputObj.state = "input";
-    addToInputStr(filteredInput);
-    handleNumericInput();
-  }
-}
-
-function handleOperatorButtonClick(event) {
-  const operatorFunc = setSelectedOperatorFunction(event.target.value);
-  if (operatorFunc) {
-    outputObj.state = "operator";
-    updateOperatorFunction(operatorFunc);
-    setOperandA();
-  }
-}
-
-function handleEqualsButtonClick() {
-  executeOperation();
-}
-
-// --- GET ELEMENTS + ATTACH EVENT LISTENERS ---
+// --- GET ELEMENTS + ATTACH EVENT LISTENERS --- //
 
 //  Get reference to Display
 const display = document.querySelector(".display.txt");
@@ -315,6 +321,6 @@ equalsBtn.addEventListener("click", handleEqualsButtonClick);
 
 // ----------------------------------------------------------------
 
-// *** Temporary functions ****
+// *** Temporary functions **** 
 
 // *** ***
