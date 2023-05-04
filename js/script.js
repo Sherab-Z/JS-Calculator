@@ -186,7 +186,11 @@ function updateDisplay() {
   } else if (outputObj.state === "input") {
     toDisplay = inputObj.inputStr;
   } else if (outputObj.state === "operator") {
-    toDisplay = inputObj.operandB;
+      if ( inputObj.operandB === "" ) {
+        // TODO: Fix this conditional statement for each case when a button is clicked in 'operator' mode - The problem: The latest state management update means that 'operator' mode remains set for all subsequent number inputs after an operator button is clicked. So I need to create more conditional cases to cover the multiple situations when a button is clicked and the calculator is in 'operator' mode.
+      } else {
+        // TODO: here too
+      }
   } else if (outputObj.state === "result") {
     toDisplay = outputObj.result;
   } else {
