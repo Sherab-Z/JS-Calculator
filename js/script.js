@@ -35,19 +35,19 @@ function handleButtonClick(event) {
 function callMatchingInputProcessorFunction(inputStr, inputType) {
   switch (inputType) {
     case "numType":
-      processNumberButtonInput(inputStr);
+      processNumberButtonInput(inputStr, inputType);
       break;
     case "modType":
-      processModifierButtonInput(inputStr);
+      processModifierButtonInput(inputStr, inputType);
       break;
     case "opType":
-      processOperatorButtonInput(inputStr);
+      processOperatorButtonInput(inputStr, inputType);
       break;
     case "clearType":
-      processClearButtonInput();
+      processClearButtonInput(inputStr, inputType);
       break;
     case "equalsType":
-      processEqualsButtonInput();
+      processEqualsButtonInput(inputStr, inputType);
       break;
     default:
       throw new Error("Unknown input type");
@@ -55,16 +55,15 @@ function callMatchingInputProcessorFunction(inputStr, inputType) {
 }
 
 // HANDLER: Number button click
-function processNumberButtonInput(inputStr) {
+function processNumberButtonInput(inputStr, inputType) {
   // Filter the input string and store in a variable
 
   const filteredInput = filterNumberButtonInput(inputStr);
 
   // Check if the filtered input is not null or undefined, and pass it to updateAppState()
   if (filteredInput != null && filteredInput !== undefined) {
-    updateAppState();
+    updateAppState(inputType);
     addToInputStr(filteredInput);
-    updateDisplay();
   }
 }
 
@@ -144,34 +143,34 @@ function getInputType(inputStr) {
 function updateAppState(inputType) {
   // For number, operator and modifier button inputs:
   if (
-    inputObj.state === "ready" ||
-    inputObj.state === "input" ||
-    inputObj.state === "result"
+    outputObj.state === "ready" ||
+    outputObj.state === "input" ||
+    outputObj.state === "result"
   ) {
     switch (inputType) {
-      case "numBtn":
-        inputObj.state = "input";
+      case "numType":
+        outputObj.state = "input";
         return;
-      case "opBtn":
-        inputObj.state = "operator";
+      case "opType":
+        outputObj.state = "operator";
         return;
-      case "modBtn":
-        inputObj.state = "input";
+      case "modType":
+        outputObj.state = "input";
         return;
       default:
       // Do nothing
     }
-  } else if (inputObj.state === "operator") {
-    inputObj.state = "operator";
+  } else if (outputObj.state === "operator") {
+    outputObj.state = "operator";
     return;
   }
 
   // For clear and equals button inputs:
   if (inputType === "equalsBtn") {
-    inputObj.state = "result";
+    outputObj.state = "result";
     return;
   } else if (inputType === "clearBtn") {
-    inputObj.state = "ready";
+    outputObj.state = "ready";
     return;
   }
 }
@@ -235,12 +234,10 @@ function toggleNumberSign() {
     toggledNumberStr.length > 10
       ? formatNumberScientifically(toggledNumber)
       : toggledNumberStr;
-  updateDisplay();
 }
 
 function convertToPercentage() {
   inputObj.inputStr *= 0.01;
-  updateDisplay();
 }
 
 // --- Operator Functions ---//
@@ -308,21 +305,18 @@ function executeOperation() {
   // TODO: Fix bug - after operator btn click, next number input sets state back to "input", but it should stay in "operator" state
 
   if (outputObj.state === "operator") {
-    setOperandB();
+    setOperandB(); // Set operandB to input value.
 
     const a = Number(inputObj.operandA);
     const b = Number(inputObj.operandB);
 
-    outputObj.result = inputObj.operator(a, b);
-    outputObj.state = "result";
-
-    updateDisplay();
+    outputObj.result = inputObj.operator(a, b); // Calculate the result and store it
+    clearInputData(); // Reset all inputObj values to ""
+    outputObj.state = "result"; // Set state
   } else if (outputObj.state === "input") {
     outputObj.result = inputObj.inputStr;
-    inputObj.inputStr = "";
+    clearInputData(); // Reset all inputObj values to ""
     outputObj.state = "result";
-
-    updateDisplay();
   } else if (outputObj.state === "result" || outputObj.state === "ready") {
     // Do nothing
   }
@@ -333,6 +327,15 @@ function executeOperation() {
 }
 
 // --- Initialization Functions --- //
+
+// FUNC: Clear operator values
+function clearInputData() {
+  // Initialize inputObj keys
+  inputObj.inputStr = "";
+  inputObj.operandA = "";
+  inputObj.operator = "";
+  inputObj.operandB = "";
+}
 
 // FUNC: Set variable object keys to initial values
 function resetCalculator() {
@@ -345,9 +348,6 @@ function resetCalculator() {
   // Initialize outputObj keys
   outputObj.result = "";
   outputObj.state = "ready";
-
-  // Display initial output value
-  updateDisplay();
 }
 
 // --- GET ELEMENTS + ATTACH EVENT LISTENERS --- //
