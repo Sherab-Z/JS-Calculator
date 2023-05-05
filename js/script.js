@@ -1,8 +1,8 @@
 // --- VARIABLE OBJECTS ------------------------------ //
 const inputObj = {
-  inputStr: "",
+  inputStr: "0",
   operandA: "",
-  operator: "",
+  operator: null,
   operandB: "",
 };
 
@@ -62,8 +62,8 @@ function processNumberButtonInput(inputStr, inputType) {
 
   // Check if the filtered input is not null or undefined, and pass it to updateAppState()
   if (filteredInput != null && filteredInput !== undefined) {
-    updateAppState(inputType);
     addToInputStr(filteredInput);
+    updateAppState(inputType);
   }
 }
 
@@ -85,7 +85,9 @@ function processModifierButtonInput(inputStr) {
 }
 
 function processOperatorButtonInput(inputStr) {
-  const operatorFunc = getSelectedOperatorFunction(inputStr);
+  // TODO: Set up this function so that the first operator button click pulls inputObj.input into operandA; and subsequent operator button clicks trigger calling executeOperation() and pull outputObj.result into operandA
+  
+  const operatorFunc = getOperatorFunction(inputStr);
 
   if (operatorFunc) {
     setOperandA();
@@ -97,6 +99,7 @@ function processOperatorButtonInput(inputStr) {
     outputObj.state = "operator";
     setOperatorFunction(operatorFunc);
   }
+
   console.table([inputObj, outputObj]);
 }
 
@@ -122,6 +125,9 @@ function filterNumberButtonInput(btnStr) {
 }
 
 function addToInputStr(btnStr) {
+  if (inputObj.inputStr === "0") {
+    inputObj.inputStr = "";
+  }
   inputObj.inputStr += btnStr;
   if (outputObj.state === "operator") {
     inputObj.operandB = inputObj.inputStr;
@@ -182,13 +188,16 @@ function updateDisplay() {
   let toDisplay = "";
 
   if (outputObj.state === "ready") {
-    toDisplay = "0";
+    toDisplay = inputObj.inputStr;
   } else if (outputObj.state === "input") {
     toDisplay = inputObj.inputStr;
   } else if (outputObj.state === "operator") {
-      if ( inputObj.operandB === "" ) {
+      if ( inputObj.operator && inputObj.operandB === "" ) {
+        toDisplay = inputObj.operandA;
+
         // TODO: Fix this conditional statement for each case when a button is clicked in 'operator' mode - The problem: The latest state management update means that 'operator' mode remains set for all subsequent number inputs after an operator button is clicked. So I need to create more conditional cases to cover the multiple situations when a button is clicked and the calculator is in 'operator' mode.
-      } else {
+      } else if ( inputObj.operator && inputObj.operandB !== "" ){
+        toDisplay = inputObj.operandB;
         // TODO: here too
       }
   } else if (outputObj.state === "result") {
@@ -267,7 +276,7 @@ function divide(a, b) {
 }
 
 // FUNC: Take operator button inputs and place the relevant operator function into opObj.operator
-function getSelectedOperatorFunction(operatorStr) {
+function getOperatorFunction(operatorStr) {
   //  Type-check arguments
   if (typeof operatorStr === "string") {
     //  Depending on the operator passed in, call the appropriate operation function on the input.
@@ -295,7 +304,14 @@ function setOperatorFunction(operatorFunc) {
 }
 
 function setOperandA() {
-  inputObj.operandA = inputObj.inputStr;
+  // TODO: Finish setting up the "operator" mode condition
+
+  if (outputObj.state === "ready" || outputObj.state === "input"){
+    inputObj.operandA = inputObj.inputStr;
+  } else if (outputObj.state === "result") {
+    inputObj.operandA = outputObj.result;
+  }
+
   inputObj.inputStr = "";
 }
 
@@ -306,7 +322,6 @@ function setOperandB() {
 
 // --- Calculation Functions --- //
 function executeOperation() {
-  // TODO: Fix bug - after operator btn click, next number input sets state back to "input", but it should stay in "operator" state
 
   if (outputObj.state === "operator") {
     setOperandB(); // Set operandB to input value.
@@ -337,16 +352,16 @@ function clearInputData() {
   // Initialize inputObj keys
   inputObj.inputStr = "";
   inputObj.operandA = "";
-  inputObj.operator = "";
+  inputObj.operator = null;
   inputObj.operandB = "";
 }
 
 // FUNC: Set variable object keys to initial values
 function resetCalculator() {
   // Initialize inputObj keys
-  inputObj.inputStr = "";
+  inputObj.inputStr = "0";
   inputObj.operandA = "";
-  inputObj.operator = "";
+  inputObj.operator = null;
   inputObj.operandB = "";
 
   // Initialize outputObj keys
