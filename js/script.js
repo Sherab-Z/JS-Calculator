@@ -85,7 +85,7 @@ function processModifierButtonInput(inputStr) {
 }
 
 function processOperatorButtonInput(inputStr) {
-  // TODO: Set up this function so that the first operator button click pulls inputObj.input into operandA; and subsequent operator button clicks trigger calling executeOperation() and pull outputObj.result into operandA
+  // TODO: Set up this function so that the first operator button click pulls inputObj.input into operandA; and subsequent operator button clicks trigger calling executeOperation() to return into operandA
   
   const operatorFunc = getOperatorFunction(inputStr);
 
