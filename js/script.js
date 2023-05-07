@@ -62,7 +62,7 @@ function processNumberButtonInput(inputStr, inputType) {
 
   // Check if the filtered input is not null or undefined, and pass it to updateAppState()
   if (filteredInput != null && filteredInput !== undefined) {
-    addToInputStr(filteredInput);
+    addToInputVarString(filteredInput);
     updateAppState(inputType);
   }
 }
@@ -99,8 +99,6 @@ function processOperatorButtonInput(inputStr) {
     outputObj.state = "operator";
     setOperatorFunction(operatorFunc);
   }
-
-  console.table([inputObj, outputObj]);
 }
 
 function processEqualsButtonInput() {
@@ -108,7 +106,7 @@ function processEqualsButtonInput() {
 }
 // HANDLER: 'AC' button click
 function processClearButtonInput() {
-  resetCalculator(); // Set variable objects inputObj and outputObj to initial values
+  resetCalculatorData(); // Set variable objects inputObj and outputObj to initial values
 }
 
 // --- Number Inputting Functions ---//
@@ -124,7 +122,7 @@ function filterNumberButtonInput(btnStr) {
   }
 }
 
-function addToInputStr(btnStr) {
+function addToInputVarString(btnStr) {
   if (inputObj.inputStr === "0") {
     inputObj.inputStr = "";
   }
@@ -330,11 +328,11 @@ function executeOperation() {
     const b = Number(inputObj.operandB);
 
     outputObj.result = inputObj.operator(a, b); // Calculate the result and store it
-    clearInputData(); // Reset all inputObj values to ""
+    resetInputObjData(); // Reset all inputObj values to ""
     outputObj.state = "result"; // Set state
   } else if (outputObj.state === "input") {
     outputObj.result = inputObj.inputStr;
-    clearInputData(); // Reset all inputObj values to ""
+    resetInputObjData(); // Reset all inputObj values to ""
     outputObj.state = "result";
   } else if (outputObj.state === "result" || outputObj.state === "ready") {
     // Do nothing
@@ -348,16 +346,16 @@ function executeOperation() {
 // --- Initialization Functions --- //
 
 // FUNC: Clear operator values
-function clearInputData() {
+function resetInputObjData() {
   // Initialize inputObj keys
-  inputObj.inputStr = "";
+  inputObj.inputStr = "0";
   inputObj.operandA = "";
   inputObj.operator = null;
   inputObj.operandB = "";
 }
 
 // FUNC: Set variable object keys to initial values
-function resetCalculator() {
+function resetCalculatorData() {
   // Initialize inputObj keys
   inputObj.inputStr = "0";
   inputObj.operandA = "";
