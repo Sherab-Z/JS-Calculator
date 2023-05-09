@@ -12,11 +12,11 @@ const outputObj = {
 };
 
 const inputTypeObj = {
-  numType: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."],
-  opType: ["+", "-", "*", "/"],
-  modType: ["+/-", "%"],
-  clearType: ["AC"],
-  equalsType: ["="],
+  numberBtnType: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."],
+  operatorBtnType: ["+", "-", "*", "/"],
+  modifierBtnType: ["+/-", "%"],
+  clearBtnType: ["AC"],
+  equalsBtnType: ["="],
 };
 
 // --- EVENT HANDLERS ------------------------------ //
@@ -34,19 +34,19 @@ function handleButtonClick(event) {
 
 function callMatchingInputProcessorFunction(inputStr, inputType) {
   switch (inputType) {
-    case "numType":
+    case "numberBtnType":
       processNumberButtonInput(inputStr, inputType);
       break;
-    case "modType":
+    case "modifierBtnType":
       processModifierButtonInput(inputStr, inputType);
       break;
-    case "opType":
+    case "operatorBtnType":
       processOperatorButtonInput(inputStr, inputType);
       break;
-    case "clearType":
+    case "clearBtnType":
       processClearButtonInput(inputStr, inputType);
       break;
-    case "equalsType":
+    case "equalsBtnType":
       processEqualsButtonInput(inputStr, inputType);
       break;
     default:
@@ -67,7 +67,7 @@ function processNumberButtonInput(inputStr, inputType) {
   }
 }
 
-function processModifierButtonInput(inputStr) {
+function processModifierButtonInput(inputStr, inputType) {
   const modifier = inputStr;
 
   switch (modifier) {
@@ -86,14 +86,14 @@ function processModifierButtonInput(inputStr) {
 
 function processOperatorButtonInput(inputStr) {
   // TODO: Set up this function so that the first operator button click pulls inputObj.input into operandA; and subsequent operator button clicks trigger calling executeOperation() to return into operandA
-  
+
   const operatorFunc = getOperatorFunction(inputStr);
 
   if (operatorFunc) {
     setOperandA();
 
-    if (inputObj.operator && inputObj.operandA && inputObj.operandB) {
-      executeOperation();
+    if (inputObj.operandA && inputObj.operandB) {
+      executeOperation(inputType = operatorBtnType);
     }
 
     outputObj.state = "operator";
@@ -102,7 +102,7 @@ function processOperatorButtonInput(inputStr) {
 }
 
 function processEqualsButtonInput() {
-  executeOperation();
+  executeOperation(inputType = equalsType);
 }
 // HANDLER: 'AC' button click
 function processClearButtonInput() {
@@ -143,75 +143,7 @@ function getInputType(inputStr) {
   return null;
 }
 
-// FUNC: Manage state after each input event
-function updateAppState(inputType) {
-  // For number, operator and modifier button inputs:
-  if (
-    outputObj.state === "ready" ||
-    outputObj.state === "input" ||
-    outputObj.state === "result"
-  ) {
-    switch (inputType) {
-      case "numType":
-        outputObj.state = "input";
-        return;
-      case "opType":
-        outputObj.state = "operator";
-        return;
-      case "modType":
-        outputObj.state = "input";
-        return;
-      default:
-      // Do nothing
-    }
-  } else if (outputObj.state === "operator") {
-    outputObj.state = "operator";
-    return;
-  }
 
-  // For clear and equals button inputs:
-  if (inputType === "equalsBtn") {
-    outputObj.state = "result";
-    return;
-  } else if (inputType === "clearBtn") {
-    outputObj.state = "ready";
-    return;
-  }
-}
-
-// --- Display Functions ---//
-
-//FUNC: Display the current output value
-function updateDisplay() {
-  let toDisplay = "";
-
-  if (outputObj.state === "ready") {
-    toDisplay = inputObj.inputStr;
-  } else if (outputObj.state === "input") {
-    toDisplay = inputObj.inputStr;
-  } else if (outputObj.state === "operator") {
-      if ( inputObj.operator && inputObj.operandB === "" ) {
-        toDisplay = inputObj.operandA;
-
-        // TODO: Fix this conditional statement for each case when a button is clicked in 'operator' mode - The problem: The latest state management update means that 'operator' mode remains set for all subsequent number inputs after an operator button is clicked. So I need to create more conditional cases to cover the multiple situations when a button is clicked and the calculator is in 'operator' mode.
-      } else if ( inputObj.operator && inputObj.operandB !== "" ){
-        toDisplay = inputObj.operandB;
-        // TODO: here too
-      }
-  } else if (outputObj.state === "result") {
-    toDisplay = outputObj.result;
-  } else {
-    throw new Error("No valid mode specified - cannot display output");
-  }
-
-  if (toDisplay.toString().length > 10) {
-    toDisplay = formatNumberScientifically(toDisplay);
-  }
-
-  display.textContent = toDisplay;
-
-  console.table([inputObj, outputObj]);
-}
 
 function formatNumberScientifically(number) {
   const maxLength = 9;
@@ -304,8 +236,11 @@ function setOperatorFunction(operatorFunc) {
 function setOperandA() {
   // TODO: Finish setting up the "operator" mode condition
 
-  if (outputObj.state === "ready" || outputObj.state === "input"){
+  if (outputObj.state === "ready" || outputObj.state === "input") {
     inputObj.operandA = inputObj.inputStr;
+  } else if (outputObj.state === "operator") {
+    outputObj.result = executeOperation();
+    inputObj.operandA = outputObj.result;
   } else if (outputObj.state === "result") {
     inputObj.operandA = outputObj.result;
   }
@@ -320,28 +255,88 @@ function setOperandB() {
 
 // --- Calculation Functions --- //
 function executeOperation() {
-
-  if (outputObj.state === "operator") {
-    setOperandB(); // Set operandB to input value.
-
+  if (inputObj.operandA && inputObj.operandB) {
     const a = Number(inputObj.operandA);
     const b = Number(inputObj.operandB);
-
-    outputObj.result = inputObj.operator(a, b); // Calculate the result and store it
-    resetInputObjData(); // Reset all inputObj values to ""
-    outputObj.state = "result"; // Set state
-  } else if (outputObj.state === "input") {
-    outputObj.result = inputObj.inputStr;
-    resetInputObjData(); // Reset all inputObj values to ""
+    outputObj.result = inputObj.operator(a, b);
+    inputObj.operandA = outputObj.result;
+    inputObj.operandB = "";
     outputObj.state = "result";
-  } else if (outputObj.state === "result" || outputObj.state === "ready") {
+  } else {
     // Do nothing
   }
-
-  console.log(
-    `executeOperation(), inputObj: [input: ${inputObj.inputStr}, a: ${inputObj.operandA}, op: ${inputObj.operator}, b: ${inputObj.operandB}] outputObj: [result: ${outputObj.result}, state: ${outputObj.state}]`
-  );
 }
+
+// FUNC: Manage state after each input event
+function updateAppState(inputType) {
+  // For number, operator and modifier button inputs:
+  if (
+    outputObj.state === "ready" ||
+    outputObj.state === "input" ||
+    outputObj.state === "result"
+  ) {
+    switch (inputType) {
+      case "numberBtnType":
+        outputObj.state = "input";
+        return;
+      case "operatorBtnType":
+        outputObj.state = "operator";
+        return;
+      case "modifierBtnType":
+        outputObj.state = "input";
+        return;
+      default:
+      // Do nothing
+    }
+  } else if (outputObj.state === "operator") {
+    outputObj.state = "operator";
+    return;
+  }
+
+  // For clear and equals button inputs:
+  if (inputType === "equalsBtn") {
+    outputObj.state = "result";
+    return;
+  } else if (inputType === "clearBtn") {
+    outputObj.state = "ready";
+    return;
+  }
+}
+
+// --- Display Functions ---//
+
+//FUNC: Display the current output value
+function updateDisplay() {
+  let toDisplay = "";
+
+  switch (outputObj.state) {
+    case "ready":
+    case "input":
+      toDisplay = inputObj.inputStr;
+      break;
+    case "operator":
+      if (inputObj.operator && inputObj.operandB === "") {
+        toDisplay = inputObj.operandA;
+      } else if (inputObj.operator && inputObj.operandB !== "") {
+        toDisplay = inputObj.operandB;
+      }
+      break;
+    case "result":
+      toDisplay = outputObj.result;
+      break;
+    default:
+      throw new Error("No valid mode specified - cannot display output");
+  }
+
+  if (toDisplay.toString().length > 10) {
+    toDisplay = formatNumberScientifically(toDisplay);
+  }
+
+  display.textContent = toDisplay;
+
+  console.table([inputObj, outputObj]);
+}
+
 
 // --- Initialization Functions --- //
 
