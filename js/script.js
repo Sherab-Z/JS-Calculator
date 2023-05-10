@@ -54,16 +54,69 @@ function callMatchingInputProcessorFunction(inputStr, inputType) {
   }
 }
 
+// --- Number Inputting Functions ---//
+
+// FUNC: Validate input number string and determine whether it can be appended to inputObj.inputStr
+function filterNumberButtonInput(btnStr) {
+  const numStrsArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  if (btnStr === "." && !inputObj.inputStr.includes(".")) {
+    return btnStr;
+  } else if (numStrsArr.includes(btnStr)) {
+    return btnStr;
+  }
+}
+
+function addToInputVarString(btnStr) {
+  if (inputObj.inputStr === "0") {
+    inputObj.inputStr = "";
+  }
+  inputObj.inputStr += btnStr;
+}
+
 // HANDLER: Number button click
 function processNumberButtonInput(inputStr, inputType) {
   // Filter the input string and store in a variable
-
   const filteredInput = filterNumberButtonInput(inputStr);
 
   // Check if the filtered input is not null or undefined, and pass it to updateAppState()
   if (filteredInput != null && filteredInput !== undefined) {
     addToInputVarString(filteredInput);
+    clearInputString(inputType);
     updateAppState(inputType);
+  }
+}
+
+function clearInputString(inputType) {
+  // TODO: Finish this function, based on where it will be called within other functions in the processing flow
+  if (inputType === 'numberBtnType') {
+    switch (inputObj.state) {
+      case 'ready':
+        inputObj.inputStr = '';
+        return;
+      case 'input':
+        return;  // do nothing
+      case 'operator':
+        
+        return;
+      case 'result':
+        return;
+      default:
+        return;
+    }
+  } else if (inputType === "operatorBtnType") {
+    switch (inputObj.state) {
+      case 'ready':
+        return;
+      case 'input':
+        return;
+      case 'operator':
+        return;
+      case 'result':
+        return;
+      default:
+        return;
+    }
   }
 }
 
@@ -85,7 +138,19 @@ function processModifierButtonInput(inputStr, inputType) {
 }
 
 function processOperatorButtonInput(inputStr) {
-  // TODO: Set up this function so that the first operator button click pulls inputObj.input into operandA; and subsequent operator button clicks trigger calling executeOperation() to return into operandA
+  /* TODO: Set up this function with conditions for an operator button being clicked when: 
+  a. State = 'ready' or 'input' mode:
+        - IF (! operandA && ! operandB): 
+            - operandA = inputStr
+            - get operator based on inputStr
+            - set operator in inputObj
+        - IF (operandA && ! operandB):
+            - 
+
+  b. State = 'operator' mode 
+        - Replace current operator with input operator
+  c. State = 'result' mode
+  */
 
   const operatorFunc = getOperatorFunction(inputStr);
 
@@ -93,7 +158,7 @@ function processOperatorButtonInput(inputStr) {
     setOperandA();
 
     if (inputObj.operandA && inputObj.operandB) {
-      executeOperation(inputType = operatorBtnType);
+      executeOperation((inputType = "operatorBtnType"));
     }
 
     outputObj.state = "operator";
@@ -102,34 +167,11 @@ function processOperatorButtonInput(inputStr) {
 }
 
 function processEqualsButtonInput() {
-  executeOperation(inputType = equalsType);
+  executeOperation((inputType = "equalsType"));
 }
 // HANDLER: 'AC' button click
 function processClearButtonInput() {
   resetCalculatorData(); // Set variable objects inputObj and outputObj to initial values
-}
-
-// --- Number Inputting Functions ---//
-
-// FUNC: Validate input number string and determine whether it can be appended to inputObj.inputStr
-function filterNumberButtonInput(btnStr) {
-  const numStrsArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
-  if (btnStr === "." && !inputObj.inputStr.includes(".")) {
-    return btnStr;
-  } else if (numStrsArr.includes(btnStr)) {
-    return btnStr;
-  }
-}
-
-function addToInputVarString(btnStr) {
-  if (inputObj.inputStr === "0") {
-    inputObj.inputStr = "";
-  }
-  inputObj.inputStr += btnStr;
-  if (outputObj.state === "operator") {
-    inputObj.operandB = inputObj.inputStr;
-  }
 }
 
 // --- State Management Functions --- //
@@ -142,8 +184,6 @@ function getInputType(inputStr) {
   }
   return null;
 }
-
-
 
 function formatNumberScientifically(number) {
   const maxLength = 9;
@@ -234,7 +274,7 @@ function setOperatorFunction(operatorFunc) {
 }
 
 function setOperandA() {
-  // TODO: Finish setting up the "operator" mode condition
+  // TODO: Finish setting up the 'operator' mode condition
 
   if (outputObj.state === "ready" || outputObj.state === "input") {
     inputObj.operandA = inputObj.inputStr;
@@ -244,8 +284,6 @@ function setOperandA() {
   } else if (outputObj.state === "result") {
     inputObj.operandA = outputObj.result;
   }
-
-  inputObj.inputStr = "";
 }
 
 function setOperandB() {
@@ -289,8 +327,19 @@ function updateAppState(inputType) {
       // Do nothing
     }
   } else if (outputObj.state === "operator") {
-    outputObj.state = "operator";
-    return;
+    switch (inputType) {
+      case "numberBtnType":
+        outputObj.state = "input";
+        return;
+      case "operatorBtnType":
+        outputObj.state = "operator";
+        return;
+      case "modifierBtnType":
+        outputObj.state = "input";
+        return;
+      default:
+      // Do nothing
+    }
   }
 
   // For clear and equals button inputs:
@@ -336,7 +385,6 @@ function updateDisplay() {
 
   console.table([inputObj, outputObj]);
 }
-
 
 // --- Initialization Functions --- //
 
