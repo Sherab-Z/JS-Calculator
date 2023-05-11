@@ -75,52 +75,52 @@ function addToInputVarString(btnStr) {
 }
 
 // HANDLER: Number button click
-function processNumberButtonInput(inputStr, inputType) {
+function processNumberButtonInput(inputStr, inputType = 'numberBtnType') {
   // Filter the input string and store in a variable
   const filteredInput = filterNumberButtonInput(inputStr);
 
   // Check if the filtered input is not null or undefined, and pass it to updateAppState()
   if (filteredInput != null && filteredInput !== undefined) {
     addToInputVarString(filteredInput);
-    clearInputString(inputType);
     updateAppState(inputType);
   }
 }
 
-function clearInputString(inputType) {
+function clearInputString() {
   // TODO: Finish this function, based on where it will be called within other functions in the processing flow
-  if (inputType === 'numberBtnType') {
-    switch (inputObj.state) {
-      case 'ready':
-        inputObj.inputStr = '';
-        return;
-      case 'input':
-        return;  // do nothing
-      case 'operator':
+  inputObj.inputStr = '';
+  // if (inputType === 'numberBtnType') {
+  //   switch (inputObj.state) {
+  //     case 'ready':
+  //       inputObj.inputStr = '';
+  //       return;
+  //     case 'input':
+  //       return;  // do nothing
+  //     case 'operator':
         
-        return;
-      case 'result':
-        return;
-      default:
-        return;
-    }
-  } else if (inputType === "operatorBtnType") {
-    switch (inputObj.state) {
-      case 'ready':
-        return;
-      case 'input':
-        return;
-      case 'operator':
-        return;
-      case 'result':
-        return;
-      default:
-        return;
-    }
-  }
+  //       return;
+  //     case 'result':
+  //       return;
+  //     default:
+  //       return;
+  //   }
+  // } else if (inputType === "operatorBtnType") {
+  //   switch (inputObj.state) {
+  //     case 'ready':
+  //       return;
+  //     case 'input':
+  //       return;
+  //     case 'operator':
+  //       return;
+  //     case 'result':
+  //       return;
+  //     default:
+  //       return;
+  //   }
+  // }
 }
 
-function processModifierButtonInput(inputStr, inputType) {
+function processModifierButtonInput(inputStr, inputType = 'modifierBtnType') {
   const modifier = inputStr;
 
   switch (modifier) {
@@ -137,7 +137,7 @@ function processModifierButtonInput(inputStr, inputType) {
   }
 }
 
-function processOperatorButtonInput(inputStr) {
+function processOperatorButtonInput(inputStr, inputType = 'operatorBtnType') {
   /* TODO: Set up this function with conditions for an operator button being clicked when: 
   a. State = 'ready' or 'input' mode:
         - IF (! operandA && ! operandB): 
@@ -150,6 +150,8 @@ function processOperatorButtonInput(inputStr) {
   b. State = 'operator' mode 
         - Replace current operator with input operator
   c. State = 'result' mode
+
+  ALWAYS clear inputObj.input at the end, ready for next number input
   */
 
   const operatorFunc = getOperatorFunction(inputStr);
@@ -158,19 +160,20 @@ function processOperatorButtonInput(inputStr) {
     setOperandA();
 
     if (inputObj.operandA && inputObj.operandB) {
-      executeOperation((inputType = "operatorBtnType"));
+      executeOperation(inputType);
     }
 
     outputObj.state = "operator";
     setOperatorFunction(operatorFunc);
   }
+  clearInputString(inputType);
 }
 
-function processEqualsButtonInput() {
-  executeOperation((inputType = "equalsType"));
+function processEqualsButtonInput(inputType = 'equalsBtnType') {
+  executeOperation(inputType);
 }
 // HANDLER: 'AC' button click
-function processClearButtonInput() {
+function processClearButtonInput(inputType = 'clearBtnType') {
   resetCalculatorData(); // Set variable objects inputObj and outputObj to initial values
 }
 
@@ -303,6 +306,7 @@ function executeOperation() {
   } else {
     // Do nothing
   }
+  clearInputString();
 }
 
 // FUNC: Manage state after each input event
