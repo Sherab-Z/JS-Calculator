@@ -1,22 +1,22 @@
 // --- VARIABLE OBJECTS ------------------------------ //
 const inputObj = {
-  inputStr: "0",
-  operandA: "",
+  inputStr: '0',
+  operandA: '',
   operator: null,
-  operandB: "",
+  operandB: '',
 };
 
 const outputObj = {
-  result: "",
-  state: "ready", // 4 States: ready, input, operator & result.
+  result: '',
+  state: 'ready', // 4 States: ready, input, operator & result.
 };
 
 const inputTypeObj = {
-  numberBtnType: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."],
-  operatorBtnType: ["+", "-", "*", "/"],
-  modifierBtnType: ["+/-", "%"],
-  clearBtnType: ["AC"],
-  equalsBtnType: ["="],
+  numberBtnType: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'],
+  operatorBtnType: ['+', '-', '*', '/'],
+  modifierBtnType: ['+/-', '%'],
+  clearBtnType: ['AC'],
+  equalsBtnType: ['='],
 };
 
 // --- EVENT HANDLERS ------------------------------ //
@@ -34,23 +34,23 @@ function handleButtonClick(event) {
 
 function callMatchingInputProcessorFunction(inputStr, inputType) {
   switch (inputType) {
-    case "numberBtnType":
+    case 'numberBtnType':
       processNumberButtonInput(inputStr, inputType);
       break;
-    case "modifierBtnType":
+    case 'modifierBtnType':
       processModifierButtonInput(inputStr, inputType);
       break;
-    case "operatorBtnType":
+    case 'operatorBtnType':
       processOperatorButtonInput(inputStr, inputType);
       break;
-    case "clearBtnType":
+    case 'clearBtnType':
       processClearButtonInput(inputStr, inputType);
       break;
-    case "equalsBtnType":
+    case 'equalsBtnType':
       processEqualsButtonInput(inputStr, inputType);
       break;
     default:
-      throw new Error("Unknown input type");
+      throw new Error('Unknown input type');
   }
 }
 
@@ -58,9 +58,9 @@ function callMatchingInputProcessorFunction(inputStr, inputType) {
 
 // FUNC: Validate input number string and determine whether it can be appended to inputObj.inputStr
 function filterNumberButtonInput(btnStr) {
-  const numStrsArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  const numStrsArr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-  if (btnStr === "." && !inputObj.inputStr.includes(".")) {
+  if (btnStr === '.' && !inputObj.inputStr.includes('.')) {
     return btnStr;
   } else if (numStrsArr.includes(btnStr)) {
     return btnStr;
@@ -68,113 +68,103 @@ function filterNumberButtonInput(btnStr) {
 }
 
 function addToInputVarString(btnStr) {
-  if (inputObj.inputStr === "0") {
-    inputObj.inputStr = "";
+  if (inputObj.inputStr === '0') {
+    inputObj.inputStr = '';
   }
   inputObj.inputStr += btnStr;
 }
 
 // HANDLER: Number button click
-function processNumberButtonInput(inputStr, inputType = 'numberBtnType') {
+function processNumberButtonInput(inputStr) {
+  const inputType = 'numberBtnType';
+
   // Filter the input string and store in a variable
-  const filteredInput = filterNumberButtonInput(inputStr);
+  const filteredInput = filterNumberButtonInput(inputStr, inputType);
 
   // Check if the filtered input is not null or undefined, and pass it to updateAppState()
   if (filteredInput != null && filteredInput !== undefined) {
     addToInputVarString(filteredInput);
-    updateAppState(inputType);
+    updateAppState('input');
   }
 }
 
-function clearInputString() {
-  // TODO: Finish this function, based on where it will be called within other functions in the processing flow
-  inputObj.inputStr = '';
-  // if (inputType === 'numberBtnType') {
-  //   switch (inputObj.state) {
-  //     case 'ready':
-  //       inputObj.inputStr = '';
-  //       return;
-  //     case 'input':
-  //       return;  // do nothing
-  //     case 'operator':
-        
-  //       return;
-  //     case 'result':
-  //       return;
-  //     default:
-  //       return;
-  //   }
-  // } else if (inputType === "operatorBtnType") {
-  //   switch (inputObj.state) {
-  //     case 'ready':
-  //       return;
-  //     case 'input':
-  //       return;
-  //     case 'operator':
-  //       return;
-  //     case 'result':
-  //       return;
-  //     default:
-  //       return;
-  //   }
-  // }
-}
-
-function processModifierButtonInput(inputStr, inputType = 'modifierBtnType') {
+function processModifierButtonInput(inputStr) {
+  const inputType = 'modifierBtnType';
   const modifier = inputStr;
 
+  updateAppState('input');
+
   switch (modifier) {
-    case "+/-":
+    case '+/-':
       toggleNumberSign();
       break;
-    case "%":
+    case '%':
       convertToPercentage();
       break;
     default:
       throw new Error(
-        "Error: no valid modifier string received by event handler (processModifierButtonInput)"
+        'Error: no valid modifier string received by event handler (processModifierButtonInput)'
       );
   }
 }
 
-function processOperatorButtonInput(inputStr, inputType = 'operatorBtnType') {
-  /* TODO: Set up this function with conditions for an operator button being clicked when: 
-  a. State = 'ready' or 'input' mode:
-        - IF (! operandA && ! operandB): 
-            - operandA = inputStr
-            - get operator based on inputStr
-            - set operator in inputObj
-        - IF (operandA && ! operandB):
-            - 
+function processOperatorButtonInput(inputStr) {
 
-  b. State = 'operator' mode 
-        - Replace current operator with input operator
-  c. State = 'result' mode
+  /* When I hit an op btn, what should happen? 
 
-  ALWAYS clear inputObj.input at the end, ready for next number input
+  If operandA is empty: 
+    - put inputStr into operandA;
+    - clear inputStr
+    - state = 'input'.
+  If operandA contains a number and operator contains a function: 
+    - put inputStr into operandB, 
+    - calculate based on pre-existing operator func, 
+    - place result into operandA, 
+    - set operator to new input function
+    - clear inputStr,
+    - clear operandB, 
+    - state = 'input'.
+  
   */
 
-  const operatorFunc = getOperatorFunction(inputStr);
+  const inputType = 'operatorBtnType';
+  updateAppState('operator');
 
-  if (operatorFunc) {
-    setOperandA();
+  const newOperatorFunc = getNewOperatorFunction(inputStr, inputType);
 
-    if (inputObj.operandA && inputObj.operandB) {
-      executeOperation(inputType);
+  if (newOperatorFunc) {
+
+    if (inputObj.operandA === ''
+        && inputObj.operator === null
+        && inputObj.operandB === ''
+        ) {
+      inputObj.operandA = inputObj.inputStr;  // Set operand A to last number input string
+      inputObj.operator = newOperatorFunc;  // Set operator to current input function
+    } else if ( inputObj.operandA !== '' 
+                && inputObj.operator !== null
+              ) {
+      inputObj.operandB = inputObj.inputStr;
+      const operationResult = executeOperation();  // calculate based on pre-existing values
+      inputObj.operandA = operationResult.toString();  // Set operand A to the result of the operation
+      inputObj.operator = newOperatorFunc; // Update operator to new operator function
+      resetOperandB();
+    } else {
+      throw new Error ("Error: ")
     }
-
-    outputObj.state = "operator";
-    setOperatorFunction(operatorFunc);
   }
-  clearInputString(inputType);
+  resetInputString();
 }
 
-function processEqualsButtonInput(inputType = 'equalsBtnType') {
-  executeOperation(inputType);
+function processEqualsButtonInput(inputStr, inputType) {
+  inputObj.operandB = inputObj.inputStr;
+  outputObj.result = executeOperation();
+  updateDisplay();
+  updateAppState('result');
 }
 // HANDLER: 'AC' button click
-function processClearButtonInput(inputType = 'clearBtnType') {
+function processClearButtonInput(inputStr, inputType) {
   resetCalculatorData(); // Set variable objects inputObj and outputObj to initial values
+  // No need to call updateAppState, as state is updated by the resetCalculatorData function.
 }
 
 // --- State Management Functions --- //
@@ -249,18 +239,18 @@ function divide(a, b) {
 }
 
 // FUNC: Take operator button inputs and place the relevant operator function into opObj.operator
-function getOperatorFunction(operatorStr) {
+function getNewOperatorFunction(operatorStr) {
   //  Type-check arguments
-  if (typeof operatorStr === "string") {
+  if (typeof operatorStr === 'string') {
     //  Depending on the operator passed in, call the appropriate operation function on the input.
     switch (operatorStr) {
-      case "+":
+      case '+':
         return add;
-      case "-":
+      case '-':
         return subtract;
-      case "*":
+      case '*':
         return multiply;
-      case "/":
+      case '/':
         return divide;
       default:
         console.error(`${operatorStr} is not a valid operator string`);
@@ -271,27 +261,19 @@ function getOperatorFunction(operatorStr) {
   }
 }
 
-function setOperatorFunction(operatorFunc) {
-  inputObj.operator = operatorFunc;
-  outputObj.state = "operator";
+function setnewOperatorFunction(newOperatorFunc) {
+  inputObj.operator = newOperatorFunc;
+  outputObj.state = 'operator';
 }
 
 function setOperandA() {
   // TODO: Finish setting up the 'operator' mode condition
-
-  if (outputObj.state === "ready" || outputObj.state === "input") {
     inputObj.operandA = inputObj.inputStr;
-  } else if (outputObj.state === "operator") {
-    outputObj.result = executeOperation();
-    inputObj.operandA = outputObj.result;
-  } else if (outputObj.state === "result") {
-    inputObj.operandA = outputObj.result;
-  }
 }
 
 function setOperandB() {
   inputObj.operandB = inputObj.inputStr;
-  inputObj.inputStr = "";
+  inputObj.inputStr = '';
 }
 
 // --- Calculation Functions --- //
@@ -299,86 +281,43 @@ function executeOperation() {
   if (inputObj.operandA && inputObj.operandB) {
     const a = Number(inputObj.operandA);
     const b = Number(inputObj.operandB);
-    outputObj.result = inputObj.operator(a, b);
-    inputObj.operandA = outputObj.result;
-    inputObj.operandB = "";
-    outputObj.state = "result";
+
+    return inputObj.operator(a, b);
   } else {
     // Do nothing
   }
-  clearInputString();
 }
 
 // FUNC: Manage state after each input event
-function updateAppState(inputType) {
-  // For number, operator and modifier button inputs:
-  if (
-    outputObj.state === "ready" ||
-    outputObj.state === "input" ||
-    outputObj.state === "result"
-  ) {
-    switch (inputType) {
-      case "numberBtnType":
-        outputObj.state = "input";
-        return;
-      case "operatorBtnType":
-        outputObj.state = "operator";
-        return;
-      case "modifierBtnType":
-        outputObj.state = "input";
-        return;
-      default:
-      // Do nothing
-    }
-  } else if (outputObj.state === "operator") {
-    switch (inputType) {
-      case "numberBtnType":
-        outputObj.state = "input";
-        return;
-      case "operatorBtnType":
-        outputObj.state = "operator";
-        return;
-      case "modifierBtnType":
-        outputObj.state = "input";
-        return;
-      default:
-      // Do nothing
-    }
-  }
-
-  // For clear and equals button inputs:
-  if (inputType === "equalsBtn") {
-    outputObj.state = "result";
-    return;
-  } else if (inputType === "clearBtn") {
-    outputObj.state = "ready";
-    return;
-  }
+function updateAppState(newState) {
+  outputObj.state = newState;
 }
 
 // --- Display Functions ---//
 
 //FUNC: Display the current output value
 function updateDisplay() {
-  let toDisplay = "";
+  let toDisplay = '';
 
   switch (outputObj.state) {
-    case "ready":
-    case "input":
+    case 'ready':
       toDisplay = inputObj.inputStr;
       break;
-    case "operator":
-      if (inputObj.operator && inputObj.operandB === "") {
+    case 'input':
+      toDisplay = inputObj.inputStr;
+      break;
+    case 'operator':
+      if (inputObj.operator && inputObj.operandB === '') {
         toDisplay = inputObj.operandA;
-      } else if (inputObj.operator && inputObj.operandB !== "") {
+      } else if (inputObj.operator && inputObj.operandB !== '') {
         toDisplay = inputObj.operandB;
       }
       break;
-    case "result":
+    case 'result':
       toDisplay = outputObj.result;
       break;
     default:
-      throw new Error("No valid mode specified - cannot display output");
+      throw new Error('No valid mode specified - cannot display output');
   }
 
   if (toDisplay.toString().length > 10) {
@@ -392,80 +331,93 @@ function updateDisplay() {
 
 // --- Initialization Functions --- //
 
+function resetInputString() {
+  inputObj.inputStr = '';
+}
+
+function resetOperandA() {
+  inputObj.operandA = '';
+}
+
+function resetOperandB() {
+  inputObj.operandB = '';
+}
+
 // FUNC: Clear operator values
 function resetInputObjData() {
+  // TODO: Do I need this function?
   // Initialize inputObj keys
-  inputObj.inputStr = "0";
-  inputObj.operandA = "";
+  inputObj.inputStr = '0';
+  inputObj.operandA = '';
   inputObj.operator = null;
-  inputObj.operandB = "";
+  inputObj.operandB = '';
 }
 
 // FUNC: Set variable object keys to initial values
 function resetCalculatorData() {
   // Initialize inputObj keys
-  inputObj.inputStr = "0";
-  inputObj.operandA = "";
+  inputObj.inputStr = '0';
+  inputObj.operandA = '';
   inputObj.operator = null;
-  inputObj.operandB = "";
+  inputObj.operandB = '';
 
   // Initialize outputObj keys
-  outputObj.result = "";
-  outputObj.state = "ready";
+  outputObj.result = '';
+  outputObj.state = 'ready';
 }
 
 // --- GET ELEMENTS + ATTACH EVENT LISTENERS --- //
 
 //  Display
-const display = document.querySelector(".display.txt");
+const display = document.querySelector('.display.txt');
 
 //  Number buttons
 const numberButtons = {
-  decimal: document.querySelector(".btn.decimal"),
-  zero: document.querySelector(".btn.num-0"),
-  one: document.querySelector(".btn.num-1"),
-  two: document.querySelector(".btn.num-2"),
-  three: document.querySelector(".btn.num-3"),
-  four: document.querySelector(".btn.num-4"),
-  five: document.querySelector(".btn.num-5"),
-  six: document.querySelector(".btn.num-6"),
-  seven: document.querySelector(".btn.num-7"),
-  eight: document.querySelector(".btn.num-8"),
-  nine: document.querySelector(".btn.num-9"),
+  decimal: document.querySelector('.btn.decimal'),
+  zero: document.querySelector('.btn.num-0'),
+  one: document.querySelector('.btn.num-1'),
+  two: document.querySelector('.btn.num-2'),
+  three: document.querySelector('.btn.num-3'),
+  four: document.querySelector('.btn.num-4'),
+  five: document.querySelector('.btn.num-5'),
+  six: document.querySelector('.btn.num-6'),
+  seven: document.querySelector('.btn.num-7'),
+  eight: document.querySelector('.btn.num-8'),
+  nine: document.querySelector('.btn.num-9'),
 };
 
 for (const btnEl of Object.values(numberButtons)) {
-  btnEl.addEventListener("click", handleButtonClick);
+  btnEl.addEventListener('click', handleButtonClick);
 }
 
 // Clear (AC) button
-const clearButton = document.querySelector(".btn.modifier.clear");
-clearButton.addEventListener("click", handleButtonClick);
+const clearButton = document.querySelector('.btn.modifier.clear');
+clearButton.addEventListener('click', handleButtonClick);
 
 // Modifier buttons
 const modifierButtons = {
-  sign: document.querySelector(".btn.modifier.sign"),
-  percent: document.querySelector(".btn.modifier.modulus"),
+  sign: document.querySelector('.btn.modifier.sign'),
+  percent: document.querySelector('.btn.modifier.modulus'),
 };
 
-modifierButtons["sign"].addEventListener("click", handleButtonClick);
-modifierButtons["percent"].addEventListener("click", handleButtonClick);
+modifierButtons['sign'].addEventListener('click', handleButtonClick);
+modifierButtons['percent'].addEventListener('click', handleButtonClick);
 
 //  Operator buttons
 const operatorButtons = {
   //  For readability, I used different names for these buttons than their corresponding functions
-  div: document.querySelector(".btn.operator.divide"),
-  mult: document.querySelector(".btn.operator.multiply"),
-  sub: document.querySelector(".btn.operator.subtract"),
-  plus: document.querySelector(".btn.operator.add"),
+  div: document.querySelector('.btn.operator.divide'),
+  mult: document.querySelector('.btn.operator.multiply'),
+  sub: document.querySelector('.btn.operator.subtract'),
+  plus: document.querySelector('.btn.operator.add'),
 };
 
 Object.values(operatorButtons).forEach((btnEl) => {
-  btnEl.addEventListener("click", handleButtonClick);
+  btnEl.addEventListener('click', handleButtonClick);
 });
 
 //  Equals button
-const equalsBtn = document.querySelector(".btn.equals");
-equalsBtn.addEventListener("click", handleButtonClick);
+const equalsBtn = document.querySelector('.btn.equals');
+equalsBtn.addEventListener('click', handleButtonClick);
 
 // ----------------------------------------------------------------

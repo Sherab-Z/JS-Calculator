@@ -147,3 +147,15 @@ A simple calculator app which runs in the browser. It displays one number at a t
 - [] Make it look nice! This is a great project to practice your CSS skills. At least make the operations a different color from the keypad buttons.
 - [] Add a “backspace” button, so the user can undo if they click the wrong number.
 - [] Add keyboard support! You might run into an issue where keys such as (/) might cause you some trouble. Read the MDN documentation for event.preventDefault to help solve this problem.
+
+
+Current TODO's:
+- Plan & update: processOperatorBtnInput function - based on conditional logic
+- Fix: executeOperation function calls: it is being called twice in the operation flow - once by processOperatorBtnInput and again by setOperandA 
+- Update: equals btn should update state to 'result' mode
+  - Refac: updateAppState
+- Fix: result not being calculated when equals btn is clicked
+
+
+Future REFAC's:
+- Remove inputStr as a parameter from most functions, as it's not needed much
