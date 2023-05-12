@@ -155,7 +155,7 @@ A simple calculator app which runs in the browser. It displays one number at a t
 - Fix: executeOperation function calls: it is being called twice in the operation flow - once by processOperatorBtnInput and again by setOperandA 
 - Fix: result not being calculated when equals btn is clicked
 - Entering another operator straight after the first results in this error: "caught TypeError: Cannot read properties of undefined (reading 'toString')" in processOperatorButtonInput function
-- 
+- percent modifier func returns a number into .inputStr, it should return a string
   
 
 ## Updates:
