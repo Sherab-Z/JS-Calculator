@@ -110,20 +110,28 @@ function processModifierButtonInput(inputStr) {
 
 function processOperatorButtonInput(inputStr) {
 
-  /* When I hit an op btn, what should happen? 
+  /* When user clicks an operator btn, what should happen? 
 
-  If operandA is empty: 
+  IF .inputStr is '0' & .operandA is empty & .operator is null (This is the first operator input)
+    - 
     - put inputStr into operandA;
     - clear inputStr
-    - state = 'input'.
-  If operandA contains a number and operator contains a function: 
-    - put inputStr into operandB, 
+
+  ELSE IF .operandA contains a number and .operator contains a function (Subsequent operator inputs) 
+
+      IF inputStr contains a number: (not an empty string) (Current operator is being input immediately after a number input):
+        - put inputStr into operandB, 
+      ELSE IF inputStr === '': (Current operator is being input immediately after a prior operator input)
+        - copy operandA into operandB
+
     - calculate based on pre-existing operator func, 
     - place result into operandA, 
     - set operator to new input function
-    - clear inputStr,
-    - clear operandB, 
-    - state = 'input'.
+
+  - clear inputStr,
+  - clear operandB, 
+
+    
   
   */
 
@@ -143,11 +151,20 @@ function processOperatorButtonInput(inputStr) {
     } else if ( inputObj.operandA !== '' 
                 && inputObj.operator !== null
               ) {
-      inputObj.operandB = inputObj.inputStr;
-      const operationResult = executeOperation();  // calculate based on pre-existing values
-      inputObj.operandA = operationResult.toString();  // Set operand A to the result of the operation
-      inputObj.operator = newOperatorFunc; // Update operator to new operator function
-      resetOperandB();
+      if (inputObj.inputStr !== '' && inputObj.operator === null) {  // This is the first operator input
+        inputObj.operandB = inputObj.inputStr;
+        const operationResult = executeOperation();  // calculate based on pre-existing values
+        inputObj.operandA = operationResult.toString();  // Set operand A to the result of the operation
+        inputObj.operator = newOperatorFunc; // Update operator to new operator function
+        resetOperandB();
+      } else if (inputObj.inputStr === '' && inputObj.operator !== null) {  // This current operator input is being entered immediately after a prior operator input, with no number input in-between
+        inputObj.operandB = inputObj.operandA; //  Copy operandA into operandB and calculate based on 
+        const operationResult = executeOperation();  // calculate based on pre-existing values
+        inputObj.operandA = operationResult.toString();  // Set operand A to the result of the operation
+        inputObj.operator = newOperatorFunc; // Update operator to new operator function
+        resetOperandB();
+      } 
+      
     } else {
       throw new Error ("Error: ")
     }

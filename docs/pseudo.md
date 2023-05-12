@@ -149,13 +149,20 @@ A simple calculator app which runs in the browser. It displays one number at a t
 - [] Add keyboard support! You might run into an issue where keys such as (/) might cause you some trouble. Read the MDN documentation for event.preventDefault to help solve this problem.
 
 
-Current TODO's:
-- Plan & update: processOperatorBtnInput function - based on conditional logic
+# Current TODO's
+
+## Bugs:
 - Fix: executeOperation function calls: it is being called twice in the operation flow - once by processOperatorBtnInput and again by setOperandA 
+- Fix: result not being calculated when equals btn is clicked
+- Entering another operator straight after the first results in this error: "caught TypeError: Cannot read properties of undefined (reading 'toString')" in processOperatorButtonInput function
+- 
+  
+
+## Updates:
+- Plan & update: processOperatorBtnInput function - based on conditional logic
 - Update: equals btn should update state to 'result' mode
   - Refac: updateAppState
-- Fix: result not being calculated when equals btn is clicked
 
 
-Future REFAC's:
+## Refactors:
 - Remove inputStr as a parameter from most functions, as it's not needed much
