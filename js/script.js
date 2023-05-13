@@ -141,7 +141,9 @@ function processOperatorButtonInput(inputStr) {  // TODO: Include case: Operator
         );
       }
       // Perform the operation based on existing operator & place result and new operator in their vars
-      const operationResult = executeOperation(); // calculate based on pre-existing values
+      const operationResult = executeOperation(); // calculate based on set values
+      outputObj.result = operationResult.toString();  // 
+
       inputObj.operandA = operationResult.toString(); // Set operand A to the result of the operation
       inputObj.operator = newOperatorFunc; // Update operator to new operator function
     } else {
@@ -154,18 +156,18 @@ function processOperatorButtonInput(inputStr) {  // TODO: Include case: Operator
   }
   // Reset vars, ready for next input
   resetInputString();
-  resetOperandB();
   // Update app state
   updateAppState("operator");
 }
 
 function processEqualsButtonInput(inputStr, inputType) {
-  inputObj.operandB = inputObj.inputStr;
+  //  TODO: Fix bug: equals button results in error msg bc .result is empty string. Try solution: abstract out code 'if' blocks in processOperatorButtonInput, and use them in conditional logic inside this function too.
+  
   outputObj.result = executeOperation();
-  resetOperandB();
-  updateDisplay();
+  resetInputObjData();
   updateAppState("result");
 }
+
 // HANDLER: 'AC' button click
 function processClearButtonInput(inputStr, inputType) {
   resetCalculatorData(); // Set variable objects inputObj and outputObj to initial values
