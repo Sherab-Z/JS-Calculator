@@ -78,6 +78,10 @@ function addToInputVarString(btnStr) {
 function processNumberButtonInput(inputStr) {
   const inputType = "numberBtnType";
 
+  if (outputObj.state !== 'input') {  // Unless a number is already being input, clear the inputStr var to start fresh
+    inputObj.inputStr = '';
+  }
+
   // Filter the input string and store in a variable
   const filteredInput = filterNumberButtonInput(inputStr, inputType);
 
@@ -116,24 +120,23 @@ function processOperatorButtonInput(inputStr) {  // TODO: Include case: Operator
 
   if (newOperatorFunc) {
     if (inputObj.operandA === "" && inputObj.operator === null) {
-      // First operator input in this calculation
+      // If this is the first operator input in this calculation:
       if (outputObj.state === "ready" || outputObj.state === "input") {
-        // I'm using nested if for useful error msgs in case of state mis-alignment, & for consistency
-        inputObj.operandA = inputObj.inputStr; // Set operand A to last number input string
+        // Note: I'm using nested if for useful error msgs in case of state mis-alignment, & for consistency
+        inputObj.operandA = inputObj.inputStr; // Set operand A to the last input string
         inputObj.operator = newOperatorFunc; // Set operator to current input function
       } else {
-        // Error
         throw new Error(
           `ERROR: First operator entered in calculation, but state is misaligned`
         );
       }
     } else if (inputObj.operandA !== "" && inputObj.operator !== null) {
-      //  Subsequent operator inputs
+      //  For subsequent operator inputs, after the first one:
       if (outputObj.state === "input") {
-        // Last input was a number
+        // If the last input was a number
         inputObj.operandB = inputObj.inputStr;
       } else if (outputObj.state === "operator") {
-        // Last input was an operator
+        // If the last input was an operator
         inputObj.operandB = inputObj.operandA;
       } else {
         throw new Error(
@@ -142,7 +145,7 @@ function processOperatorButtonInput(inputStr) {  // TODO: Include case: Operator
       }
       // Perform the operation based on existing operator & place result and new operator in their vars
       const operationResult = executeOperation(); // calculate based on set values
-      outputObj.result = operationResult.toString();  // 
+      outputObj.result = operationResult.toString();  //  
 
       inputObj.operandA = operationResult.toString(); // Set operand A to the result of the operation
       inputObj.operator = newOperatorFunc; // Update operator to new operator function
@@ -154,15 +157,14 @@ function processOperatorButtonInput(inputStr) {  // TODO: Include case: Operator
   } else {
     throw new Error("Error: ");
   }
-  // Reset vars, ready for next input
-  resetInputString();
+
   // Update app state
   updateAppState("operator");
 }
 
 function processEqualsButtonInput(inputStr, inputType) {
   //  TODO: Fix bug: equals button results in error msg bc .result is empty string. Try solution: abstract out code 'if' blocks in processOperatorButtonInput, and use them in conditional logic inside this function too.
-  
+
   outputObj.result = executeOperation();
   resetInputObjData();
   updateAppState("result");
@@ -220,7 +222,8 @@ function toggleNumberSign() {
 }
 
 function convertToPercentage() {
-  inputObj.inputStr *= 0.01;
+  const percentNum = inputObj.inputStr * 0.01; //  get percentage
+  inputObj.inputStr = percentNum.toString();  //  Replace inputStr with its percentage in string form.
 }
 
 // --- Operator Functions ---//

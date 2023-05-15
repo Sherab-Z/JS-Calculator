@@ -152,17 +152,20 @@ A simple calculator app which runs in the browser. It displays one number at a t
 # Current TODO's
 
 ## Bugs:
-- Fix: executeOperation function calls: it is being called twice in the operation flow - once by processOperatorBtnInput and again by setOperandA 
-- Fix: result not being calculated when equals btn is clicked
-- Entering another operator straight after the first results in this error: "caught TypeError: Cannot read properties of undefined (reading 'toString')" in processOperatorButtonInput function
-- percent modifier func returns a number into .inputStr, it should return a string
+[] Fix: executeOperation function calls: it is being called twice in the operation flow - once by processOperatorBtnInput and again by setOperandA 
+[] Pressing 
+[] Fix: result not being calculated when equals btn is clicked
+[] Entering another operator straight after the first results in this error: "caught TypeError: Cannot read properties of undefined (reading 'toString')" in processOperatorButtonInput function
+[x]- percent modifier func returns a number into .inputStr, it should return a string
   
 
 ## Updates:
-- Plan & update: processOperatorBtnInput function - based on conditional logic
-- Update: equals btn should update state to 'result' mode
+[] Plan & update: processOperatorBtnInput function - based on conditional logic
+[] Update: equals btn should update state to 'result' mode
   - Refac: updateAppState
 
 
 ## Refactors:
-- Remove inputStr as a parameter from most functions, as it's not needed much
+[] Remove inputStr as a parameter from most functions, as it's not needed much
+
+
