@@ -128,13 +128,17 @@ function processOperatorButtonInput(inputStr) {
         // Note: I'm using nested if for useful error msgs in case of state mis-alignment, & for consistency
         inputObj.operandA = inputObj.inputStr; // Set operand A to the last input string
         inputObj.operator = newOperatorFunc; // Set operator to current input function
+      } else if (outputObj.state === "result") {
+        inputObj.operandA = outputObj.result; // Set operand A to the last result
+        inputObj.operator = newOperatorFunc; // Set operator to current input
       } else {
         throw new Error(
           `ERROR: First operator entered in calculation, but state is misaligned`
         );
       }
+    
     } else {
-      //  For subsequent operator inputs, after the first one:
+      //  For subsequent operator inputs, after the first one in a calculation:
       if (outputObj.state === "input") {
         // If the last input was a number
         inputObj.operandB = inputObj.inputStr;
@@ -147,7 +151,7 @@ function processOperatorButtonInput(inputStr) {
         );
       }
       // Perform the operation based on existing operator & place result and new operator in their vars
-      const operationResult = executeOperation(); // calculate based on set values
+      const operationResult = calculateResult(); // calculate based on set values
       outputObj.result = operationResult.toString(); //
 
       inputObj.operandA = operationResult.toString(); // Set operand A to the result of the operation
@@ -165,18 +169,20 @@ function processOperatorButtonInput(inputStr) {
 }
 
 function processEqualsButtonInput(inputStr, inputType) {
-  if (inputObj.operator === '') {  // If no operator has been set
+  if (inputObj.operator === "") {
+    // If no operator has been set
     outputObj.result = inputObj.operandA; //  Simply set the result to the number input value
   } else {
-    if (inputObj.operandB === '') {  // If an operator has been set, but operandB is empty
-      inputObj.operandB = inputObj.operandA;  // Copy operandA to operandB
+    if (inputObj.operandB === "") {
+      // If an operator has been set, but operandB is empty
+      inputObj.operandB = inputObj.operandA; // Copy operandA to operandB
     }
-    outputObj.result = executeOperation().toString();  // Set result to the stringified result of the operation
+    outputObj.result = calculateResult().toString(); // Set result to the stringified result of the operation
   }
 
-  if (inputObj.operator !== '') 
-  //  Tidy up the variables
-  resetInputObjData();
+  if (inputObj.operator !== "")
+    //  Tidy up the variables
+    resetInputObjData();
   updateAppState("result");
 }
 
@@ -308,14 +314,20 @@ function setOperandB() {
 }
 
 // --- Calculation Functions --- //
-function executeOperation() {
+function calculateResult() {
   if (inputObj.operandA && inputObj.operandB) {
     const a = Number(inputObj.operandA);
     const b = Number(inputObj.operandB);
 
-    return inputObj.operator(a, b);
-  } else {
-    // Do nothing
+    if (
+      inputObj.operator === "divide(a, b) {return a / b;}" &&
+      inputObj.operandB === "0"
+    ) {
+      // IF user tries to divide by 0
+      updateDisplay(`That's not allowed!`);
+    } else {
+      return inputObj.operator(a, b);
+    }
   }
 }
 
@@ -327,36 +339,39 @@ function updateAppState(newState) {
 // --- Display Functions ---//
 
 //FUNC: Display the current output value
-function updateDisplay() {
+function updateDisplay(outputString) {
   let toDisplay = "";
 
-  switch (outputObj.state) {
-    case "ready":
-      toDisplay = inputObj.inputStr;
-      break;
-    case "input":
-      toDisplay = inputObj.inputStr;
-      break;
-    case "operator":
-      if (inputObj.operator && inputObj.operandB === "") {
-        toDisplay = inputObj.operandA;
-      } else if (inputObj.operator && inputObj.operandB !== "") {
-        toDisplay = inputObj.operandB;
-      }
-      break;
-    case "result":
-      toDisplay = outputObj.result;
-      break;
-    default:
-      throw new Error("No valid mode specified - cannot display output");
-  }
+  if (!outputString) {
 
-  if (toDisplay.toString().length > 10) {
-    toDisplay = formatNumberScientifically(toDisplay);
-  }
+    switch (outputObj.state) {
+      case "ready":
+        toDisplay = inputObj.inputStr;
+        break;
+      case "input":
+        toDisplay = inputObj.inputStr;
+        break;
+      case "operator":
+        if (inputObj.operator && inputObj.operandB === "") {
+          toDisplay = inputObj.operandA;
+        } else if (inputObj.operator && inputObj.operandB !== "") {
+          toDisplay = inputObj.operandB;
+        }
+        break;
+      case "result":
+        toDisplay = outputObj.result;
+        break;
+      default:
+        throw new Error("No valid mode specified - cannot display output");
+    }
 
+    if (toDisplay.toString().length > 10) {
+      toDisplay = formatNumberScientifically(toDisplay);
+    }
+  } else {
+    toDisplay = outputString;
+  }
   display.textContent = toDisplay;
-
   logObjValues();
 }
 
