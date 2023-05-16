@@ -152,9 +152,9 @@ A simple calculator app which runs in the browser. It displays one number at a t
 # Current TODO's
 
 ## Bugs:
-[] Fix: executeOperation function calls: it is being called twice in the operation flow - once by processOperatorBtnInput and again by setOperandA 
+[] executeOperation function calls: it's being called twice in the operation flow - once by processOperatorBtnInput and again by setOperandA 
 [] Pressing 
-[] Fix: result not being calculated when equals btn is clicked
+> [] Result is not being calculated when equals btn is clicked
 [] Entering another operator straight after the first results in this error: "caught TypeError: Cannot read properties of undefined (reading 'toString')" in processOperatorButtonInput function
 [x]- percent modifier func returns a number into .inputStr, it should return a string
   
@@ -168,4 +168,15 @@ A simple calculator app which runs in the browser. It displays one number at a t
 ## Refactors:
 [] Remove inputStr as a parameter from most functions, as it's not needed much
 
-
+# NEW LOGIC FLOW:
+- starts in 'ready' mode, with initial values in objects. 
+    - .toDisplay = .inputStr ('0')
+- first num input --> .inputStr --> .operandA , empty .inputStr at end  set .state = 'input' mode. 
+    - .toDisplay = .operandA
+- first operator input --> .operator , set .state = 'operator' mode
+    - .toDisplay = .operandA
+- subsequent num input --> .inputStr --> .operandB , set .state = 'input' mode
+    - .toDisplay = .operandB
+- subsequent operator input --> calculate with prior values and operator, place result into .operandA --> put new op input into .operator , empty .operandB , set .state = 'operator' mode
+    - .toDisplay = .operand
+- equals btn click --> perform operation based on current inputObj values --> place into .result
