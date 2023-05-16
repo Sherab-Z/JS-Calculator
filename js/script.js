@@ -13,7 +13,8 @@ const outputObj = {
 };
 
 const inputTypeObj = {
-  numberBtnType: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."],
+  numberBtnType: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+  decimalBtnType: ["."],  
   operatorBtnType: ["+", "-", "*", "/"],
   modifierBtnType: ["+/-", "%"],
   clearBtnType: ["AC"],
@@ -38,6 +39,9 @@ function callMatchingInputProcessorFunction(inputStr, inputType) {
     case "numberBtnType":
       processNumberButtonInput(inputStr, inputType);
       break;
+    case "decimalBtnType":
+      processNumberButtonInput(inputStr, inputType);
+      break;
     case "modifierBtnType":
       processModifierButtonInput(inputStr, inputType);
       break;
@@ -55,39 +59,19 @@ function callMatchingInputProcessorFunction(inputStr, inputType) {
   }
 }
 
-// --- Number Inputting Functions ---//
-
-// FUNC: Validate input number string and determine whether it can be appended to inputObj.inputStr
-function filterNumberButtonInput(btnStr) {
-  const numStrsArr = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]; // array of allowed digit inputs
-
-  if (btnStr === "." && !inputObj.inputStr.includes(".")) {
-    // If it's the FIRST decimal input, allow it
-    return btnStr;
-  } else if (numStrsArr.includes(btnStr)) {
-    // If it's an allowed digit input, allow it
-    return btnStr;
-  }
-}
-
-function addToInputVarString(btnStr) {
-  inputObj.inputStr += btnStr;
-}
-
 // HANDLER: Number button click
-function processNumberButtonInput(inputStr) {
-  const inputType = "numberBtnType";
-
-  if (outputObj.state !== "input") {
-    // Unless a number is already being input, clear the inputStr var to start fresh
-    inputObj.inputStr = "";
-  }
-
+function processNumberButtonInput(inputStr, inputType) {
   // Filter the input string and store in a variable
   const filteredInput = filterNumberButtonInput(inputStr, inputType);
 
   // Check if the filtered input is not null or undefined, and append it to inputStr
   if (filteredInput != null && filteredInput !== undefined) {
+    if (outputObj.state === "operator" || outputObj.state === "result") {
+      if (inputType === "numberBtnType") {
+      // Unless a number is already being input, clear the inputStr var to start fresh
+      inputObj.inputStr = "";
+      }
+    }
     addToInputVarString(filteredInput);
     duplicateInputStrValueToTheCorrectOperand();
     updateAppState("input");
@@ -115,8 +99,6 @@ function processModifierButtonInput(inputStr) {
 }
 
 function processOperatorButtonInput(inputStr) {
-  // TODO: Include case: Operator entered after '=' button clicked
-
   const inputType = "operatorBtnType";
 
   const newOperatorFunc = getNewOperatorFunction(inputStr, inputType);
@@ -136,7 +118,6 @@ function processOperatorButtonInput(inputStr) {
           `ERROR: First operator entered in calculation, but state is misaligned`
         );
       }
-    
     } else {
       //  For subsequent operator inputs, after the first one in a calculation:
       if (outputObj.state === "input") {
@@ -171,11 +152,11 @@ function processOperatorButtonInput(inputStr) {
 function processEqualsButtonInput(inputStr, inputType) {
   if (inputObj.operator === null) {
     // If no operator has been set
-    if (outputObj.result === '') {  // IF there's no result from the previous operation
-      outputObj.result = inputObj.inputStr;  // Set the result to the input string
+    if (outputObj.result === "") {
+      // IF there's no result from the previous operation
+      outputObj.result = inputObj.inputStr; // Set the result to the input string
     } else {
       // TODO: Fix this so results show up correctly based on variable states. If I hit = twice, it should show the same result; etc
-      
     }
   } else {
     if (inputObj.operandB === "") {
@@ -195,6 +176,25 @@ function processEqualsButtonInput(inputStr, inputType) {
 function processClearButtonInput(inputStr, inputType) {
   resetCalculatorData(); // Set variable objects inputObj and outputObj to initial values
   updateAppState("ready"); // Redundant code included for consistency
+}
+
+// --- Number Inputting Functions ---//
+
+// FUNC: Validate input number string and determine whether it can be appended to inputObj.inputStr
+function filterNumberButtonInput(inputStr, inputType) {
+  if (inputType === 'decimalBtnType' && ! inputObj.inputStr.includes(".")) {
+    // If it's the FIRST decimal input, allow it
+    return inputStr;
+  } else if (inputType === 'numberBtnType') {
+    // If it's a digit, allow it
+    return inputStr;
+  } else {
+    throw new Error("ERROR: Invalid number input");
+  }
+}
+
+function addToInputVarString(btnStr) {
+  inputObj.inputStr += btnStr;
 }
 
 // --- State Management Functions --- //
@@ -309,7 +309,6 @@ function setnewOperatorFunction(newOperatorFunc) {
 }
 
 function setOperandA() {
-  // TODO: Finish setting up the 'operator' mode condition
   inputObj.operandA = inputObj.inputStr;
 }
 
@@ -348,7 +347,6 @@ function updateDisplay(outputString) {
   let toDisplay = "";
 
   if (!outputString) {
-
     switch (outputObj.state) {
       case "ready":
         toDisplay = inputObj.inputStr;
@@ -396,7 +394,6 @@ function resetOperandB() {
 
 // FUNC: Clear operator values
 function resetInputObjData() {
-  // TODO: Do I need this function?
   // Initialize inputObj keys
   inputObj.inputStr = "0";
   inputObj.operandA = "";

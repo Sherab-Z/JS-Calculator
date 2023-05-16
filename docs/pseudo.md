@@ -166,6 +166,7 @@ A simple calculator app which runs in the browser. It displays one number at a t
 # Current TODO's
 
 ## Bugs:
+[] If '.' is input first, it replaces whatever number is already there in inputStr, and sets oparandA to '.' 
 [x] executeOperation function calls: it's being called twice in the operation flow - once by processOperatorBtnInput and again by setOperandA 
 [x] Result is not being calculated when equals btn is clicked
 [] Entering another operator straight after the first results in this error: "caught TypeError: Cannot read properties of undefined (reading 'toString')" in processOperatorButtonInput function
