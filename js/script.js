@@ -374,8 +374,12 @@ function updateDisplay(outputString) {
   } else {
     toDisplay = outputString;
   }
+  if (toDisplay === 'Infinity' || toDisplay === 'NaN') {
+    toDisplay = `No no!`
+  }
   display.textContent = toDisplay;
-  logObjValues();
+
+  consoleLogAllObjectValues();
 }
 
 // --- Initialization Functions --- //
@@ -470,6 +474,6 @@ equalsBtn.addEventListener("click", handleButtonClick);
 
 // ----------------------------------------------------------------
 
-function logObjValues() {
+function consoleLogAllObjectValues() {
   console.table([inputObj, outputObj]);
 }
