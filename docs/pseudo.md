@@ -96,17 +96,31 @@ A simple calculator app which runs in the browser. It displays one number at a t
       2. While the calculator is running:
          a. [x] Wait for user input.
          b. [] IF (the user enters a digit or decimal point - via event listeners on num btns):
-            i. Append the input to the current input value in the input queue.
-            ii. Set the output value to the new input value.
+                  IF it's the first number input:
+                     i. Append the input to .operandA
+                     ii. Set .toDisplay to .operandA
+                  ELSE IF it's a subsequent number input:
+                     i. Append the input to .operandB
+                     ii. Set .toDisplay to .operandB
          c. [] IF (the user enters an operator):
-            i. IF an operator has already been set: calculate the result and set the output value to the result, then set inObj.operator to the input operator.
-            ii. IF an operator has not been set, set the current operator to the input operator and set the calculator state to "operator mode".
+                  IF an operator has already been set: 
+                     - calculate the result,
+                     - and set .operandA and .toDisplay values to the result, 
+                     - then set inObj.operator to the new operator.
+                  ELSE IF an operator has not been set: 
+                     - set the current operator to the input operator
+                - Clear .inputStr 
+                - set the .state to "operator" mode.
          d. [] IF (the user enters a modifier):
-            i. IF the modifier is "%" or "+/-", modify the current input value in the input queue accordingly.
-            ii. IF the modifier is "AC", clear the input queue and reset the calculator to its initial state.
+                  IF the modifier is "%" or "+/-", modify the current input value in the input queue accordingly.
+                  IF the modifier is "AC", clear the input queue and reset the calculator to its initial state.
          e. [] IF (the user enters the equals button):
-            i. IF a second operand has already been set, calculate the result and set the output value to the result.
-            ii. IF a second operand has not been set, set the second operand to the current input value and calculate the result.
+                  IF a second operand has already been set:
+                     - calculate the result 
+                     - and set the output value to the result.
+                  ELSE IF a second operand has not been set:
+                     - set the second operand to the current input value 
+                     - and calculate the result.
          f. [] AFTER EACH INPUT: Update the state of the calculator based on the current input and output values.
          g. [] AFTER EACH INPUT: Display the current output value to the user.
 
@@ -169,6 +183,14 @@ A simple calculator app which runs in the browser. It displays one number at a t
 [] Remove inputStr as a parameter from most functions, as it's not needed much
 
 # NEW LOGIC FLOW:
+RULES:  
+* Update .state only at the end of each click's program cascade.
+* each number input into .inputStr is being duplicated into an operand at the end of click cascade:
+      IF it's the first number input (i.e. .operandA is empty):
+            -it duplicates to .operandA
+      ELSE IF it's a subsequent number input (i.e. .operandA is full):
+            - it duplicates to .operandB
+
 - starts in 'ready' mode, with initial values in objects. 
     - .toDisplay = .inputStr ('0')
 - first num input --> .inputStr --> .operandA , empty .inputStr at end  set .state = 'input' mode. 
