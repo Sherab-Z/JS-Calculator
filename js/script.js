@@ -150,7 +150,7 @@ function processOperatorButtonInput(inputStr) {
           `ERROR: Subsequent operator entered in calculation, but state is misaligned`
         );
       }
-      // Perform the operation based on existing operator & place result and new operator in their vars
+      // Perform the operation based on existing operator & place result and new operator in their places
       const operationResult = calculateResult(); // calculate based on set values
       outputObj.result = operationResult.toString(); //
 
@@ -169,9 +169,14 @@ function processOperatorButtonInput(inputStr) {
 }
 
 function processEqualsButtonInput(inputStr, inputType) {
-  if (inputObj.operator === "") {
+  if (inputObj.operator === null) {
     // If no operator has been set
-    outputObj.result = inputObj.operandA; //  Simply set the result to the number input value
+    if (outputObj.result === '') {  // IF there's no result from the previous operation
+      outputObj.result = inputObj.inputStr;  // Set the result to the input string
+    } else {
+      // TODO: Fix this so results show up correctly based on variable states. If I hit = twice, it should show the same result; etc
+      
+    }
   } else {
     if (inputObj.operandB === "") {
       // If an operator has been set, but operandB is empty
