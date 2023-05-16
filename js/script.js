@@ -150,14 +150,9 @@ function processOperatorButtonInput(inputStr) {
 }
 
 function processEqualsButtonInput(inputStr, inputType) {
-  if (inputObj.operator === null) {
-    // If no operator has been set
-    if (outputObj.result === "") {
-      // IF there's no result from the previous operation
+  if (inputObj.operator === null && outputObj.result === "") {
+    // If no operator has been set & there's no result from the previous operation:
       outputObj.result = inputObj.inputStr; // Set the result to the input string
-    } else {
-      // TODO: Fix this so results show up correctly based on variable states. If I hit = twice, it should show the same result; etc
-    }
   } else {
     if (inputObj.operandB === "") {
       // If an operator has been set, but operandB is empty
