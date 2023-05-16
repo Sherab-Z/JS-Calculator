@@ -110,6 +110,7 @@ function processModifierButtonInput(inputStr) {
         "Error: no valid modifier string received by event handler (processModifierButtonInput)"
       );
   }
+  duplicateInputStrValueToTheCorrectOperand();
   updateAppState("input");
 }
 
@@ -164,9 +165,17 @@ function processOperatorButtonInput(inputStr) {
 }
 
 function processEqualsButtonInput(inputStr, inputType) {
-  //  TODO: Fix bug: equals button results in error msg bc .result is empty string. Try solution: abstract out code 'if' blocks in processOperatorButtonInput, and use them in conditional logic inside this function too.
+  if (inputObj.operator === '') {  // If no operator has been set
+    outputObj.result = inputObj.operandA; //  Simply set the result to the number input value
+  } else {
+    if (inputObj.operandB === '') {  // If an operator has been set, but operandB is empty
+      inputObj.operandB = inputObj.operandA;  // Copy operandA to operandB
+    }
+    outputObj.result = executeOperation().toString();  // Set result to the stringified result of the operation
+  }
 
-  outputObj.result = executeOperation();
+  if (inputObj.operator !== '') 
+  //  Tidy up the variables
   resetInputObjData();
   updateAppState("result");
 }
