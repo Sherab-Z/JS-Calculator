@@ -374,7 +374,7 @@ function updateDisplay(outputString) {
   }
   display.textContent = toDisplay;
 
-  consoleLogAllObjectValues();
+  consoleLogStateVars();
 }
 
 // --- Initialization Functions --- //
@@ -471,6 +471,6 @@ equalsBtn.addEventListener("click", handleButtonClick);
 
 // ----------------------------------------------------------------
 
-function consoleLogAllObjectValues() {
+function consoleLogStateVars() {
   console.table([inputObj, outputObj]);
 }
