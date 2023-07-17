@@ -162,14 +162,14 @@ A simple calculator app which runs in the browser. It displays one number at a t
 - [] Add keyboard support! You might run into an issue where keys such as (/) might cause you some trouble. Read the MDN documentation for event.preventDefault to help solve this problem.
 
 
-# Current TODO's
+# TODO's
 
 ## Bugs:
 [] When
 [x] If '.' is input first, it replaces whatever number is already there in inputStr, and sets oparandA to '.' 
 [x] executeOperation function calls: it's being called twice in the operation flow - once by processOperatorBtnInput and again by setOperandA 
 [x] Result is not being calculated when equals btn is clicked
-[] Entering another operator straight after the first results in this error: "caught TypeError: Cannot read properties of undefined (reading 'toString')" in processOperatorButtonInput function
+[x] Entering another operator straight after the first results in this error: "caught TypeError: Cannot read properties of undefined (reading 'toString')" in processOperatorButtonInput function
 [x]- percent modifier func returns a number into .inputStr, it should return a string
   
 

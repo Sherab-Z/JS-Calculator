@@ -27,6 +27,8 @@ function handleButtonClick(event) {
   const inputStr = event.target.value;
   const inputType = getInputType(inputStr);
 
+  if (outputObj.state === "ready") resetInputString(); // Remove '0' from initial input string
+
   callMatchingInputProcessorFunction(inputStr, inputType);
 
   updateDisplay();
@@ -330,7 +332,7 @@ function calculateResult() {
   }
 }
 
-// FUNC: Manage state after each input event
+// FUNC: Manage state after each input event - States: ready, input, operator, result
 function updateAppState(newState) {
   outputObj.state = newState;
 }
